@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Site Admin — North Shore Youth Music</title>
+<link rel="stylesheet" href="styles.css">
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<style>
+  .admin-wrap { max-width: 760px; margin: 0 auto; padding: 40px 20px 80px; }
+  .admin-card {
+    background: #fff; border: 1px solid var(--line); border-radius: 6px;
+    padding: 24px; margin-bottom: 22px;
+  }
+  .admin-card h2 { font-family: var(--display); font-size: 1.3rem; margin: 0 0 18px; }
+  .field { margin-bottom: 16px; }
+  .field label { display: block; font-family: var(--mono); font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gold); margin-bottom: 6px; }
+  .field input[type=text], .field select {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 4px;
+    font-family: var(--body); font-size: 15px; box-sizing: border-box;
+  }
+  .status-row { display: flex; gap: 10px; align-items: flex-start; }
+  .status-row select { flex: 0 0 130px; }
+  .status-row input { flex: 1; }
+  #save-bar {
+    position: sticky; bottom: 0; background: var(--cream);
+    border-top: 1px solid var(--line); padding: 16px 0; margin-top: 20px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  #save-msg { font-family: var(--mono); font-size: 13px; color: var(--ink-soft); }
+  #login-gate { text-align: center; padding: 80px 20px; }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav">
+    <a href="index.html" class="brand">North Shore <span>Youth Music</span></a>
+    <span style="font-family:var(--mono); font-size:12px; color:var(--ink-soft);">Admin</span>
+  </nav>
+</header>
+
+<div id="login-gate">
+  <p style="font-family:var(--display); font-size:1.4rem; margin-bottom:20px;">Sign in to edit the site</p>
+  <button class="btn btn-gold" onclick="netlifyIdentity.open()">Log in</button>
+</div>
+
+<div id="admin-app" class="admin-wrap hidden">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+    <p style="font-family:var(--display); font-size:1.4rem; margin:0;">Edit site content</p>
+    <button class="btn btn-outline" style="color:var(--ink); border-color:var(--line);" onclick="netlifyIdentity.logout()">Log out</button>
+  </div>
+  <p id="load-msg" style="color:var(--ink-soft);">Loading current content&hellip;</p>
+
+  <form id="edit-form" class="hidden">
+
+    <div class="admin-card">
+      <h2>Choirs — rehearsal times &amp; fees</h2>
+      <div class="field"><label>Songsters — Rehearsal A</label><input type="text" data-file="choirs.html" data-id="f-songsters-rehearsal-a"></div>
+      <div class="field"><label>Songsters — Rehearsal B</label><input type="text" data-file="choirs.html" data-id="f-songsters-rehearsal-b"></div>
+      <div class="field"><label>Songsters — Fee</label><input type="text" data-file="choirs.html" data-id="f-songsters-fee"></div>
+      <div class="field"><label>Children's Choir — Rehearsal</label><input type="text" data-file="choirs.html" data-id="f-cc-rehearsal"></div>
+      <div class="field"><label>Children's Choir — Fee</label><input type="text" data-file="choirs.html" data-id="f-cc-fee"></div>
+      <div class="field"><label>Con Brio — Rehearsal</label><input type="text" data-file="choirs.html" data-id="f-cb-rehearsal"></div>
+      <div class="field"><label>Con Brio — Fee</label><input type="text" data-file="choirs.html" data-id="f-cb-fee"></div>
+    </div>
+
+    <div class="admin-card">
+      <h2>Orchestras — rehearsal times &amp; fees</h2>
+      <div class="field"><label>Stringalongs — Rehearsal</label><input type="text" data-file="orchestras.html" data-id="f-sa-rehearsal"></div>
+      <div class="field"><label>Stringalongs — Fee</label><input type="text" data-file="orchestras.html" data-id="f-sa-fee"></div>
+      <div class="field"><label>Junior Orchestra — Rehearsal</label><input type="text" data-file="orchestras.html" data-id="f-jo-rehearsal"></div>
+      <div class="field"><label>Junior Orchestra — Fee (1 child)</label><input type="text" data-file="orchestras.html" data-id="f-jo-fee1"></div>
+      <div class="field"><label>Junior Orchestra — Fee (2 children)</label><input type="text" data-file="orchestras.html" data-id="f-jo-fee2"></div>
+    </div>
+
+    <div class="admin-card">
+      <h2>Apply page — intake status</h2>
+      <div class="field"><label>Status updated label (e.g. "Status updated March 2026")</label>
+        <input type="text" data-file="apply.html" data-id="status-date" data-type="text">
+      </div>
+      <div class="field"><label>Songsters</label>
+        <div class="status-row">
+          <select data-file="apply.html" data-id="s-songsters" data-type="status-select"><option value="open">Open</option><option value="waitlist">Waitlist</option><option value="closed">Closed</option></select>
+          <input type="text" data-file="apply.html" data-id="s-songsters" data-type="status-text">
+        </div>
+      </div>
+      <div class="field"><label>Children's Choir</label>
+        <div class="status-row">
+          <select data-file="apply.html" data-id="s-childrens-choir" data-type="status-select"><option value="open">Open</option><option value="waitlist">Waitlist</option><option value="closed">Closed</option></select>
+          <input type="text" data-file="apply.html" data-id="s-childrens-choir" data-type="status-text">
+        </div>
+      </div>
+      <div class="field"><label>Junior Orchestra</label>
+        <div class="status-row">
+          <select data-file="apply.html" data-id="s-junior-orchestra" data-type="status-select"><option value="open">Open</option><option value="waitlist">Waitlist</option><option value="closed">Closed</option></select>
+          <input type="text" data-file="apply.html" data-id="s-junior-orchestra" data-type="status-text">
+        </div>
+      </div>
+      <div class="field"><label>Stringalongs</label>
+        <div class="status-row">
+          <select data-file="apply.html" data-id="s-stringalongs" data-type="status-select"><option value="open">Open</option><option value="waitlist">Waitlist</option><option value="closed">Closed</option></select>
+          <input type="text" data-file="apply.html" data-id="s-stringalongs" data-type="status-text">
+        </div>
+      </div>
+      <div class="field"><label>Con Brio</label>
+        <div class="status-row">
+          <select data-file="apply.html" data-id="s-con-brio" data-type="status-select"><option value="open">Open</option><option value="waitlist">Waitlist</option><option value="closed">Closed</option></select>
+          <input type="text" data-file="apply.html" data-id="s-con-brio" data-type="status-text">
+        </div>
+      </div>
+    </div>
+
+    <div id="save-bar">
+      <button type="submit" class="btn btn-gold">Save changes</button>
+      <span id="save-msg"></span>
+    </div>
+  </form>
+</div>
+
+<script>
+const REPO = "Thisistorq/nsym-website"; // owner/repo — update if you rename or move it
+const API_ROOT = "/.netlify/git/github/repos/" + REPO + "/contents/";
+const FILES = ["choirs.html", "orchestras.html", "apply.html"];
+let fileCache = {}; // filename -> { content, sha }
+
+function authHeader() {
+  const user = netlifyIdentity.currentUser();
+  return user ? { "Authorization": "Bearer " + user.token.access_token } : {};
+}
+
+async function loadFile(name) {
+  const res = await fetch(API_ROOT + name, { headers: authHeader() });
+  if (!res.ok) throw new Error("Failed to load " + name + " (" + res.status + ")");
+  const data = await res.json();
+  const content = atob(data.content.replace(/\n/g, ""));
+  fileCache[name] = { content, sha: data.sha };
+}
+
+function getFieldValue(content, id) {
+  const re = new RegExp('id="' + id + '"[^>]*>([\\s\\S]*?)<\\/(span|input)>', 'i');
+  // For simple <span id="...">TEXT</span> fields
+  const simple = new RegExp('id="' + id + '">([\\s\\S]*?)</span>', 'i');
+  const m = content.match(simple);
+  return m ? m[1] : null;
+}
+
+function getStatusValue(content, id) {
+  // <span id="s-x"><span class="badge STATUS">LABEL</span> TEXT</span>
+  const re = new RegExp('id="' + id + '"><span class="badge (\\w+)">\\w+</span>\\s*([\\s\\S]*?)</span>', 'i');
+  const m = content.match(re);
+  return m ? { status: m[1], text: m[2].trim() } : null;
+}
+
+function populateForm() {
+  document.querySelectorAll('[data-id]').forEach(el => {
+    const file = el.dataset.file;
+    const id = el.dataset.id;
+    const type = el.dataset.type;
+    const content = fileCache[file].content;
+    if (type === "status-select") {
+      const v = getStatusValue(content, id);
+      if (v) el.value = v.status;
+    } else if (type === "status-text") {
+      const v = getStatusValue(content, id);
+      if (v) el.value = v.text;
+    } else {
+      const v = getFieldValue(content, id);
+      if (v !== null) el.value = v;
+    }
+  });
+}
+
+function applyEdits() {
+  const edited = {};
+  FILES.forEach(f => edited[f] = fileCache[f].content);
+
+  // simple text fields
+  document.querySelectorAll('input[type=text]:not([data-type])').forEach(el => {
+    const file = el.dataset.file, id = el.dataset.id;
+    const re = new RegExp('(id="' + id + '">)([\\s\\S]*?)(</span>)', 'i');
+    edited[file] = edited[file].replace(re, (m, a, b, c) => a + el.value + c);
+  });
+
+  // status date label
+  document.querySelectorAll('[data-type="text"]').forEach(el => {
+    const file = el.dataset.file, id = el.dataset.id;
+    const re = new RegExp('(id="' + id + '">)([\\s\\S]*?)(</span>)', 'i');
+    edited[file] = edited[file].replace(re, (m, a, b, c) => a + el.value + c);
+  });
+
+  // status blocks: pair select + text by data-id
+  const statusIds = [...new Set([...document.querySelectorAll('[data-type=status-select]')].map(e => e.dataset.id))];
+  statusIds.forEach(id => {
+    const select = document.querySelector('select[data-id="' + id + '"]');
+    const text = document.querySelector('input[data-type=status-text][data-id="' + id + '"]');
+    const file = select.dataset.file;
+    const labelMap = { open: "Open", waitlist: "Waitlist", closed: "Closed" };
+    const re = new RegExp('(id="' + id + '"><span class="badge )\\w+(">)\\w+(</span>\\s*)[\\s\\S]*?(</span>)', 'i');
+    edited[file] = edited[file].replace(re, (m, a, b, c, d) =>
+      a + select.value + b + labelMap[select.value] + c + text.value + d);
+  });
+
+  return edited;
+}
+
+async function saveFile(name, content, sha) {
+  const res = await fetch(API_ROOT + name, {
+    method: "PUT",
+    headers: Object.assign({ "Content-Type": "application/json" }, authHeader()),
+    body: JSON.stringify({
+      message: "Update " + name + " via admin panel",
+      content: btoa(unescape(encodeURIComponent(content))),
+      sha: sha
+    })
+  });
+  if (!res.ok) throw new Error("Failed to save " + name + " (" + res.status + ")");
+}
+
+document.getElementById('edit-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const msg = document.getElementById('save-msg');
+  msg.textContent = "Saving…";
+  try {
+    const edited = applyEdits();
+    for (const file of FILES) {
+      if (edited[file] !== fileCache[file].content) {
+        await saveFile(file, edited[file], fileCache[file].sha);
+      }
+    }
+    msg.textContent = "Saved! Live in about 10\u201330 seconds.";
+    await init(); // refresh cache/sha for further edits
+  } catch (err) {
+    msg.textContent = "Error: " + err.message;
+  }
+});
+
+async function init() {
+  document.getElementById('load-msg').textContent = "Loading current content…";
+  for (const f of FILES) await loadFile(f);
+  populateForm();
+  document.getElementById('load-msg').classList.add('hidden');
+  document.getElementById('edit-form').classList.remove('hidden');
+}
+
+netlifyIdentity.on('init', user => {
+  if (user) {
+    document.getElementById('login-gate').classList.add('hidden');
+    document.getElementById('admin-app').classList.remove('hidden');
+    init();
+  }
+});
+netlifyIdentity.on('login', () => {
+  document.getElementById('login-gate').classList.add('hidden');
+  document.getElementById('admin-app').classList.remove('hidden');
+  init();
+});
+netlifyIdentity.on('logout', () => location.reload());
+netlifyIdentity.init();
+</script>
+</body>
+</html>
