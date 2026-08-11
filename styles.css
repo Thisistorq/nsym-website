@@ -454,6 +454,8 @@ a.programme-row:hover .title { color: var(--gold-deep); }
   background-position: center 25%;
   text-decoration: none;
 }
+.explore-card.choirs { background-image: url("images/home-card-choirs.jpg"); }
+.explore-card.orchestras { background-image: url("images/home-card-orchestras.jpg"); }
 .explore-card::before {
   content: "";
   position: absolute;
