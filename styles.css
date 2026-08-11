@@ -4,7 +4,7 @@
   --ink: #16213A;
   --ink-soft: #3A4256;
   --cream: #F6F1E4;
-  --gold: #C98A3E;
+  --gold: #00BFDF;
   --plum: #5B2A45;
   --line: rgba(22, 33, 58, 0.14);
   --line-on-ink: rgba(246, 241, 228, 0.22);
@@ -109,8 +109,10 @@ img { max-width: 100%; display: block; }
   font-size: 19px;
   text-decoration: none;
   letter-spacing: -0.01em;
+  display: inline-flex;
+  align-items: center;
 }
-.brand span { color: var(--gold); }
+.brand img { height: 30px; width: auto; }
 
 .nav-links {
   display: flex;
@@ -151,7 +153,7 @@ img { max-width: 100%; display: block; }
   background: var(--gold);
   color: var(--ink);
 }
-.btn-gold:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(201,138,62,0.35); }
+.btn-gold:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,191,223,0.35); }
 .btn-outline {
   border-color: var(--line-on-ink);
   color: var(--cream);
@@ -391,10 +393,35 @@ a.programme-row:hover .title { color: var(--gold); }
 }
 .ensemble .sub { color: var(--ink-soft); font-size: 0.95rem; margin: 0 0 20px; }
 .ensemble .wordmark {
-  height: 42px;
+  height: 68px;
   width: auto;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
+.ensemble-hero {
+  position: relative;
+  border-radius: 4px;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center 22%;
+  padding: clamp(28px, 5vw, 44px) clamp(22px, 4vw, 34px);
+  margin-bottom: 22px;
+}
+.ensemble-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(22,33,58,0.3), rgba(22,33,58,0.82));
+}
+.ensemble-hero > * { position: relative; z-index: 1; }
+.ensemble-hero .badge { color: var(--cream); border-color: rgba(246,241,228,0.65); }
+.ensemble-hero h3 {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(1.7rem, 3.4vw, 2.3rem);
+  color: var(--cream);
+  margin: 10px 0 4px;
+}
+.ensemble-hero .sub { color: rgba(246,241,228,0.88); margin: 0; font-size: 1.02rem; }
 .ensemble .headshot {
   width: 132px;
   height: 132px;
@@ -497,6 +524,24 @@ a.programme-row:hover .title { color: var(--gold); }
 .badge.open { border-color: var(--gold); color: var(--gold); }
 .badge.waitlist { border-color: var(--plum); color: var(--plum); }
 .badge.closed { border-color: var(--line); color: var(--ink-soft); }
+
+/* Embedded Google Form (Apply page) */
+.form-embed {
+  margin-top: 32px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  overflow: hidden;
+  background: #fff;
+}
+.form-embed iframe {
+  width: 100%;
+  height: 1500px;
+  border: none;
+  display: block;
+}
+@media (max-width: 600px) {
+  .form-embed iframe { height: 1850px; }
+}
 
 /* Musical Directors page — side-by-side director cards */
 .directors-grid {
