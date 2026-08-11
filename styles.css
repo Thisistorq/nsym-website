@@ -5,6 +5,7 @@
   --ink-soft: #3A4256;
   --cream: #F6F1E4;
   --gold: #00BFDF;
+  --gold-deep: #00707F;
   --plum: #5B2A45;
   --line: rgba(22, 33, 58, 0.14);
   --line-on-ink: rgba(246, 241, 228, 0.22);
@@ -49,7 +50,7 @@ img { max-width: 100%; display: block; }
   font-size: 12.5px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--gold-deep);
   display: inline-flex;
   align-items: center;
   gap: 10px;
@@ -112,7 +113,7 @@ img { max-width: 100%; display: block; }
   display: inline-flex;
   align-items: center;
 }
-.brand img { height: 30px; width: auto; }
+.brand img { height: 48px; width: auto; }
 
 .nav-links {
   display: flex;
@@ -136,7 +137,7 @@ img { max-width: 100%; display: block; }
   position: absolute;
   left: 0; right: 0; bottom: -2px;
   height: 2px;
-  background: var(--gold);
+  background: var(--gold-deep);
 }
 .btn {
   font-family: var(--body);
@@ -241,7 +242,7 @@ section + section { border-top: 1px solid var(--line); }
   font-size: clamp(1.15rem, 2.4vw, 1.5rem);
   max-width: 34ch;
   color: var(--ink);
-  border-left: 2px solid var(--gold);
+  border-left: 2px solid var(--gold-deep);
   padding-left: 22px;
   margin: 0 0 44px;
 }
@@ -267,7 +268,7 @@ section + section { border-top: 1px solid var(--line); }
 .programme .num {
   font-family: var(--mono);
   font-size: 13px;
-  color: var(--gold);
+  color: var(--gold-deep);
   letter-spacing: 0.05em;
 }
 .programme .title {
@@ -290,7 +291,7 @@ a.programme-row {
   text-decoration: none;
   color: inherit;
 }
-a.programme-row:hover .title { color: var(--gold); }
+a.programme-row:hover .title { color: var(--gold-deep); }
 @media (max-width: 600px) {
   a.programme-row { grid-template-columns: 32px 1fr; }
   a.programme-row .go { display: none; }
@@ -453,6 +454,52 @@ a.programme-row:hover .title { color: var(--gold); }
   display: block;
 }
 
+/* Homepage explore cards — two photo links to Choirs / Orchestras */
+.explore-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 700px) {
+  .explore-grid { grid-template-columns: 1fr; }
+}
+.explore-card {
+  position: relative;
+  display: block;
+  height: 320px;
+  border-radius: 4px;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center 25%;
+  text-decoration: none;
+}
+.explore-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(22,33,58,0.15), rgba(22,33,58,0.8));
+  transition: background 0.2s ease;
+}
+.explore-card:hover::before { background: linear-gradient(180deg, rgba(22,33,58,0.25), rgba(22,33,58,0.88)); }
+.explore-card .label {
+  position: absolute;
+  left: 26px;
+  bottom: 24px;
+  z-index: 1;
+}
+.explore-card h3 {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(1.6rem, 3vw, 2.1rem);
+  color: var(--cream);
+  margin: 0 0 4px;
+}
+.explore-card .go {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: rgba(246,241,228,0.85);
+}
+
 /* Unified photo hero for inner pages (replaces page-head + page-banner
    stacking) — text sits directly on the photo, same pattern as the
    homepage hero. Set the image via inline style="background-image:...". */
@@ -479,6 +526,11 @@ a.programme-row:hover .title { color: var(--gold); }
   margin: 16px 0 0;
 }
 .page-hero p { color: rgba(246,241,228,0.82); max-width: 52ch; margin-top: 14px; font-size: 1.05rem; }
+
+/* On dark backgrounds (hero, page-hero), eyebrow needs the brighter aqua —
+   the deep-teal default is for light/cream backgrounds and would be nearly
+   invisible on navy. */
+.hero .eyebrow, .page-hero .eyebrow, .page-head .eyebrow { color: var(--gold); }
 .page-hero .btn, .page-head .btn { margin-top: 22px; }
 .page-banner-caption {
   font-family: var(--mono);
@@ -503,7 +555,7 @@ a.programme-row:hover .title { color: var(--gold); }
   font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--gold-deep);
   display: block;
   margin-bottom: 4px;
 }
@@ -521,7 +573,7 @@ a.programme-row:hover .title { color: var(--gold); }
   margin-bottom: 16px;
 }
 .badge.audition { border-color: var(--plum); color: var(--plum); }
-.badge.open { border-color: var(--gold); color: var(--gold); }
+.badge.open { border-color: var(--gold-deep); color: var(--gold-deep); }
 .badge.waitlist { border-color: var(--plum); color: var(--plum); }
 .badge.closed { border-color: var(--line); color: var(--ink-soft); }
 
@@ -617,7 +669,7 @@ a.programme-row:hover .title { color: var(--gold); }
   font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--gold-deep);
   width: 120px;
   flex-shrink: 0;
   padding-top: 3px;
