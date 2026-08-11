@@ -22,6 +22,15 @@
   .status-row { display: flex; gap: 10px; align-items: flex-start; }
   .status-row select { flex: 0 0 130px; }
   .status-row input { flex: 1; }
+  .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 18px; }
+  .photo-field { text-align: center; }
+  .photo-field .thumb {
+    width: 100%; height: 100px; object-fit: cover; border-radius: 4px;
+    border: 1px solid var(--line); margin-bottom: 8px; display: block; background: #eee;
+  }
+  .photo-field label { display: block; font-family: var(--mono); font-size: 11px; color: var(--ink-soft); margin-bottom: 6px; text-transform: none; letter-spacing: 0; }
+  .photo-field input[type=file] { font-size: 12px; width: 100%; }
+  .photo-field.changed .thumb { outline: 2px solid var(--gold); }
   #save-bar {
     position: sticky; bottom: 0; background: var(--cream);
     border-top: 1px solid var(--line); padding: 16px 0; margin-top: 20px;
@@ -109,6 +118,32 @@
           <select data-file="apply.html" data-id="s-con-brio" data-type="status-select"><option value="open">Open</option><option value="waitlist">Waitlist</option><option value="closed">Closed</option></select>
           <input type="text" data-file="apply.html" data-id="s-con-brio" data-type="status-text">
         </div>
+      </div>
+    </div>
+
+    <div class="admin-card">
+      <h2>Photos</h2>
+      <p style="color:var(--ink-soft); font-size:0.9rem; margin-top:-10px; margin-bottom:20px;">Pick a new photo to replace any of these — it swaps out the current one automatically. Best results: similar shape/orientation to what's there now.</p>
+      <div class="photo-grid" id="photo-grid">
+        <div class="photo-field"><label>Homepage banner</label><img class="thumb" src="images/home-banner.jpg"><input type="file" accept="image/*" data-path="images/home-banner.jpg"></div>
+        <div class="photo-field"><label>Homepage &rarr; Choirs card</label><img class="thumb" src="images/home-choirs-link.jpg"><input type="file" accept="image/*" data-path="images/home-choirs-link.jpg"></div>
+        <div class="photo-field"><label>Homepage &rarr; Orchestras card</label><img class="thumb" src="images/home-orchestras-link.jpg"><input type="file" accept="image/*" data-path="images/home-orchestras-link.jpg"></div>
+        <div class="photo-field"><label>Carousel photo 1</label><img class="thumb" src="images/home-photo-01.jpg"><input type="file" accept="image/*" data-path="images/home-photo-01.jpg"></div>
+        <div class="photo-field"><label>Carousel photo 2</label><img class="thumb" src="images/home-photo-02.jpg"><input type="file" accept="image/*" data-path="images/home-photo-02.jpg"></div>
+        <div class="photo-field"><label>Carousel photo 3</label><img class="thumb" src="images/home-photo-03.jpg"><input type="file" accept="image/*" data-path="images/home-photo-03.jpg"></div>
+        <div class="photo-field"><label>Carousel photo 4</label><img class="thumb" src="images/home-photo-04.jpg"><input type="file" accept="image/*" data-path="images/home-photo-04.jpg"></div>
+        <div class="photo-field"><label>Carousel photo 5</label><img class="thumb" src="images/home-photo-05.jpg"><input type="file" accept="image/*" data-path="images/home-photo-05.jpg"></div>
+        <div class="photo-field"><label>Carousel photo 6</label><img class="thumb" src="images/home-photo-06.jpg"><input type="file" accept="image/*" data-path="images/home-photo-06.jpg"></div>
+        <div class="photo-field"><label>Carousel photo 7</label><img class="thumb" src="images/home-photo-07.jpg"><input type="file" accept="image/*" data-path="images/home-photo-07.jpg"></div>
+        <div class="photo-field"><label>Carousel photo 8</label><img class="thumb" src="images/home-photo-08.jpg"><input type="file" accept="image/*" data-path="images/home-photo-08.jpg"></div>
+        <div class="photo-field"><label>Songsters photo</label><img class="thumb" src="images/choirs-photo-1.jpg"><input type="file" accept="image/*" data-path="images/choirs-photo-1.jpg"></div>
+        <div class="photo-field"><label>Children's Choir photo</label><img class="thumb" src="images/choirs-photo-2.jpg"><input type="file" accept="image/*" data-path="images/choirs-photo-2.jpg"></div>
+        <div class="photo-field"><label>Con Brio photo</label><img class="thumb" src="images/choirs-photo-3.jpg"><input type="file" accept="image/*" data-path="images/choirs-photo-3.jpg"></div>
+        <div class="photo-field"><label>Stringalongs photo</label><img class="thumb" src="images/orchestras-photo-1.jpg"><input type="file" accept="image/*" data-path="images/orchestras-photo-1.jpg"></div>
+        <div class="photo-field"><label>Junior Orchestra photo</label><img class="thumb" src="images/orchestras-photo-2.jpg"><input type="file" accept="image/*" data-path="images/orchestras-photo-2.jpg"></div>
+        <div class="photo-field"><label>David Kay photo</label><img class="thumb" src="images/directors-david-kay.jpg"><input type="file" accept="image/*" data-path="images/directors-david-kay.jpg"></div>
+        <div class="photo-field"><label>Vanessa Kay photo</label><img class="thumb" src="images/directors-vanessa-kay.jpg"><input type="file" accept="image/*" data-path="images/directors-vanessa-kay.jpg"></div>
+        <div class="photo-field"><label>Contact page banner</label><img class="thumb" src="images/contact-banner.jpg"><input type="file" accept="image/*" data-path="images/contact-banner.jpg"></div>
       </div>
     </div>
 
@@ -229,6 +264,12 @@ document.getElementById('edit-form').addEventListener('submit', async (e) => {
         await saveFile(file, edited[file], fileCache[file].sha);
       }
     }
+    const photoPaths = Object.keys(pendingPhotos);
+    for (const path of photoPaths) {
+      await savePhoto(path, pendingPhotos[path].dataUrl);
+      delete pendingPhotos[path];
+    }
+    document.querySelectorAll('.photo-field.changed').forEach(f => f.classList.remove('changed'));
     msg.textContent = "Saved! Live in about 10\u201330 seconds.";
     await init(); // refresh cache/sha for further edits
   } catch (err) {
@@ -242,6 +283,40 @@ async function init() {
   populateForm();
   document.getElementById('load-msg').classList.add('hidden');
   document.getElementById('edit-form').classList.remove('hidden');
+}
+
+// ---- Photo uploads ----
+const pendingPhotos = {}; // path -> { file, dataUrl }
+
+document.querySelectorAll('#photo-grid input[type=file]').forEach(input => {
+  input.addEventListener('change', () => {
+    const file = input.files[0];
+    if (!file) return;
+    const path = input.dataset.path;
+    const reader = new FileReader();
+    reader.onload = () => {
+      pendingPhotos[path] = { file, dataUrl: reader.result };
+      const field = input.closest('.photo-field');
+      field.querySelector('.thumb').src = reader.result;
+      field.classList.add('changed');
+    };
+    reader.readAsDataURL(file);
+  });
+});
+
+async function savePhoto(path, dataUrl) {
+  const base64 = dataUrl.split(',')[1];
+  // Need the current sha to update an existing file
+  const getRes = await fetch(API_ROOT + path, { headers: authHeader() });
+  const sha = getRes.ok ? (await getRes.json()).sha : undefined;
+  const body = { message: "Update " + path + " via admin panel", content: base64 };
+  if (sha) body.sha = sha;
+  const res = await fetch(API_ROOT + path, {
+    method: "PUT",
+    headers: Object.assign({ "Content-Type": "application/json" }, authHeader()),
+    body: JSON.stringify(body)
+  });
+  if (!res.ok) throw new Error("Failed to save " + path + " (" + res.status + ")");
 }
 
 netlifyIdentity.on('init', user => {
