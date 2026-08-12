@@ -163,13 +163,19 @@ const API_ROOT = "/.netlify/git/github/repos/" + REPO + "/contents/";
 const FILES = ["choirs.html", "orchestras.html", "apply.html"];
 let fileCache = {}; // filename -> { content, sha }
 
-function authHeader() {
+async function authHeader() {
   const user = netlifyIdentity.currentUser();
-  return user ? { "Authorization": "Bearer " + user.token.access_token } : {};
+  if (!user) return {};
+  // Important: don't read user.token.access_token directly — it can be
+  // stale/expired. user.jwt() refreshes the token first if needed, then
+  // returns a valid one. Using the raw cached token was causing 401s even
+  // right after a successful login.
+  const token = await user.jwt();
+  return { "Authorization": "Bearer " + token };
 }
 
 async function loadFile(name) {
-  const res = await fetch(API_ROOT + name, { headers: authHeader() });
+  const res = await fetch(API_ROOT + name, { headers: await authHeader() });
   if (!res.ok) throw new Error("Failed to load " + name + " (" + res.status + ")");
   const data = await res.json();
   const content = atob(data.content.replace(/\n/g, ""));
@@ -246,7 +252,7 @@ function applyEdits() {
 async function saveFile(name, content, sha) {
   const res = await fetch(API_ROOT + name, {
     method: "PUT",
-    headers: Object.assign({ "Content-Type": "application/json" }, authHeader()),
+    headers: Object.assign({ "Content-Type": "application/json" }, await authHeader()),
     body: JSON.stringify({
       message: "Update " + name + " via admin panel",
       content: btoa(unescape(encodeURIComponent(content))),
@@ -281,11 +287,17 @@ document.getElementById('edit-form').addEventListener('submit', async (e) => {
 });
 
 async function init() {
-  document.getElementById('load-msg').textContent = "Loading current content…";
-  for (const f of FILES) await loadFile(f);
-  populateForm();
-  document.getElementById('load-msg').classList.add('hidden');
-  document.getElementById('edit-form').classList.remove('hidden');
+  const loadMsg = document.getElementById('load-msg');
+  loadMsg.textContent = "Loading current content…";
+  loadMsg.classList.remove('hidden');
+  try {
+    for (const f of FILES) await loadFile(f);
+    populateForm();
+    loadMsg.classList.add('hidden');
+    document.getElementById('edit-form').classList.remove('hidden');
+  } catch (err) {
+    loadMsg.textContent = "Couldn't load content: " + err.message + " — try logging out and back in, or let Carl know.";
+  }
 }
 
 // ---- Photo uploads ----
@@ -310,13 +322,13 @@ document.querySelectorAll('#photo-grid input[type=file]').forEach(input => {
 async function savePhoto(path, dataUrl) {
   const base64 = dataUrl.split(',')[1];
   // Need the current sha to update an existing file
-  const getRes = await fetch(API_ROOT + path, { headers: authHeader() });
+  const getRes = await fetch(API_ROOT + path, { headers: await authHeader() });
   const sha = getRes.ok ? (await getRes.json()).sha : undefined;
   const body = { message: "Update " + path + " via admin panel", content: base64 };
   if (sha) body.sha = sha;
   const res = await fetch(API_ROOT + path, {
     method: "PUT",
-    headers: Object.assign({ "Content-Type": "application/json" }, authHeader()),
+    headers: Object.assign({ "Content-Type": "application/json" }, await authHeader()),
     body: JSON.stringify(body)
   });
   if (!res.ok) throw new Error("Failed to save " + path + " (" + res.status + ")");
