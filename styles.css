@@ -231,6 +231,7 @@ img { max-width: 100%; display: block; }
 
 /* ---------- Sections ---------- */
 section { padding: clamp(52px, 8vw, 92px) 0; }
+section.section-tight-top { padding-top: clamp(28px, 4vw, 44px); }
 section + section { border-top: 1px solid var(--line); }
 .section-head { margin-bottom: 40px; max-width: 60ch; }
 .section-head h2 {
@@ -528,6 +529,27 @@ a.programme-row:hover .title { color: var(--gold-deep); }
 }
 .page-hero h1:first-child { margin-top: 0; }
 .page-hero p { color: rgba(244,246,247,0.82); max-width: 52ch; margin-top: 14px; font-size: 1.05rem; }
+.hero-split {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+.quote-on-hero {
+  background: rgba(22,33,58,0.55);
+  border-left: 2px solid var(--gold);
+  color: var(--cream);
+  padding: 18px 22px;
+  border-radius: 4px;
+  max-width: 320px;
+  margin: 0;
+  font-size: 1.05rem;
+}
+.quote-on-hero cite { color: rgba(244,246,247,0.75); }
+@media (max-width: 780px) {
+  .hero-split { align-items: flex-start; }
+}
 
 /* On dark backgrounds (hero, page-hero), eyebrow needs the brighter aqua —
    the deep-teal default is for light/cream backgrounds and would be nearly
