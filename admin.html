@@ -169,31 +169,16 @@
 </div>
 
 <script>
-const REPO = "Thisistorq/nsym-website"; // owner/repo — update if you rename or move it
-// Calling GitHub's Contents API directly, bypassing Netlify's Git Gateway
-// proxy — Git Gateway was returning a persistent "Access to endpoint not
-// allowed" 401 regardless of the underlying token, a platform-level issue
-// unrelated to our own code. This uses a GitHub Personal Access Token
-// (classic, 'repo' scope) instead.
-//
-// Security note: this token is embedded in this page's source and is
-// visible to anyone who logs into the admin panel and inspects it — they
-// could extract it and use it outside this form too. Acceptable tradeoff
-// for this site (a nonprofit's public marketing site, no sensitive repo
-// contents), but worth remembering. If the token is ever compromised or
-// needs rotating, generate a new one at github.com/settings/tokens and
-// swap the value below (then redeploy).
-const GITHUB_TOKEN = "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";
-const API_ROOT = "https://api.github.com/repos/" + REPO + "/contents/";
+// Content reads/writes go through our own Netlify Function
+// (netlify/functions/github-content.js), which holds the real GitHub
+// token as a server-side environment variable — the browser never sees
+// it. Earlier approaches (Netlify's Git Gateway, then embedding the token
+// directly in this page) both failed: Git Gateway hit a platform-level
+// restriction, and GitHub's own secret-scanning auto-revoked the embedded
+// token within moments of it being committed.
+const API_ROOT = "/.netlify/functions/github-content?path=";
 const FILES = ["choirs.html", "orchestras.html", "apply.html"];
 let fileCache = {}; // filename -> { content, sha }
-
-function githubHeaders(extra) {
-  return Object.assign({
-    "Authorization": "token " + GITHUB_TOKEN,
-    "Accept": "application/vnd.github+json"
-  }, extra || {});
-}
 
 // ---- Direct Identity API auth (no widget) ----
 // This still gates who can get into the page at all (a real login is
@@ -272,7 +257,7 @@ document.getElementById('logout-btn').addEventListener('click', () => {
 if (getSession()) showApp();
 
 async function loadFile(name) {
-  const res = await fetch(API_ROOT + name, { headers: githubHeaders() });
+  const res = await fetch(API_ROOT + name);
   if (!res.ok) throw new Error("Failed to load " + name + " (" + res.status + ")");
   const data = await res.json();
   const content = atob(data.content.replace(/\n/g, ""));
@@ -349,7 +334,7 @@ function applyEdits() {
 async function saveFile(name, content, sha) {
   const res = await fetch(API_ROOT + name, {
     method: "PUT",
-    headers: githubHeaders({ "Content-Type": "application/json" }),
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       message: "Update " + name + " via admin panel",
       content: btoa(unescape(encodeURIComponent(content))),
@@ -419,13 +404,13 @@ document.querySelectorAll('#photo-grid input[type=file]').forEach(input => {
 async function savePhoto(path, dataUrl) {
   const base64 = dataUrl.split(',')[1];
   // Need the current sha to update an existing file
-  const getRes = await fetch(API_ROOT + path, { headers: githubHeaders() });
+  const getRes = await fetch(API_ROOT + path);
   const sha = getRes.ok ? (await getRes.json()).sha : undefined;
   const body = { message: "Update " + path + " via admin panel", content: base64 };
   if (sha) body.sha = sha;
   const res = await fetch(API_ROOT + path, {
     method: "PUT",
-    headers: githubHeaders({ "Content-Type": "application/json" }),
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body)
   });
   if (!res.ok) throw new Error("Failed to save " + path + " (" + res.status + ")");
