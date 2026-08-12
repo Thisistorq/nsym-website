@@ -10,24 +10,17 @@
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" href="images/favicon-32.png" type="image/png">
 <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
-<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body>
 
 <script>
-  // Handles Identity invite/confirmation/recovery links that land on the
-  // homepage (Netlify's default redirect target) — without this, tokens in
-  // the URL are never processed and the account never gets confirmed.
-  //
-  // Note: for invite_token / recovery_token specifically, the widget's own
-  // automatic handling has been seen to try completing signup with an
-  // empty password instead of showing the form. Forcing the widget open
-  // explicitly when one of these tokens is present works around that.
-  if (window.netlifyIdentity) {
-    netlifyIdentity.init();
-    if (location.hash && /invite_token=|recovery_token=/.test(location.hash)) {
-      netlifyIdentity.open();
-    }
+  // Netlify's invite/recovery emails always link to the site root with a
+  // token in the URL hash — redirect straight to our own accept-invite
+  // page (which talks to Netlify Identity's API directly) rather than
+  // relying on Netlify's bundled widget, which has a bug where it tries
+  // to complete invite signups with an empty password automatically.
+  if (location.hash && /invite_token=|recovery_token=/.test(location.hash)) {
+    location.replace('accept-invite.html' + location.hash);
   }
 </script>
 <header class="site-header">

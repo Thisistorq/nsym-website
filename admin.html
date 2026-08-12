@@ -8,7 +8,6 @@
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" href="images/favicon-32.png" type="image/png">
 <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
-<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 <style>
   .admin-wrap { max-width: 760px; margin: 0 auto; padding: 40px 20px 80px; }
   .admin-card {
@@ -40,7 +39,14 @@
     display: flex; align-items: center; gap: 16px;
   }
   #save-msg { font-family: var(--mono); font-size: 13px; color: var(--ink-soft); }
-  #login-gate { text-align: center; padding: 80px 20px; }
+  #login-gate { max-width: 380px; margin: 100px auto; padding: 0 20px; text-align: left; }
+  #login-gate .field { margin-bottom: 16px; }
+  #login-gate input {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 4px;
+    font-family: var(--body); font-size: 15px; box-sizing: border-box;
+  }
+  #login-msg { font-family: var(--mono); font-size: 13px; margin-top: 12px; }
+  #login-msg.error { color: #b3261e; }
   .hidden { display: none; }
 </style>
 </head>
@@ -55,13 +61,18 @@
 
 <div id="login-gate">
   <p style="font-family:var(--display); font-size:1.4rem; margin-bottom:20px;">Sign in to edit the site</p>
-  <button class="btn btn-gold" onclick="netlifyIdentity.open()">Log in</button>
+  <form id="login-form">
+    <div class="field"><label>Email</label><input type="email" id="login-email" required autocomplete="username"></div>
+    <div class="field"><label>Password</label><input type="password" id="login-password" required autocomplete="current-password"></div>
+    <button type="submit" class="btn btn-gold">Log in</button>
+    <div id="login-msg"></div>
+  </form>
 </div>
 
 <div id="admin-app" class="admin-wrap hidden">
   <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
     <p style="font-family:var(--display); font-size:1.4rem; margin:0;">Edit site content</p>
-    <button class="btn btn-outline" style="color:var(--ink); border-color:var(--line);" onclick="netlifyIdentity.logout()">Log out</button>
+    <button class="btn btn-outline" style="color:var(--ink); border-color:var(--line);" id="logout-btn">Log out</button>
   </div>
   <p id="load-msg" style="color:var(--ink-soft);">Loading current content&hellip;</p>
 
@@ -164,15 +175,82 @@ const FILES = ["choirs.html", "orchestras.html", "apply.html"];
 let fileCache = {}; // filename -> { content, sha }
 
 async function authHeader() {
-  const user = netlifyIdentity.currentUser();
-  if (!user) return {};
-  // Important: don't read user.token.access_token directly — it can be
-  // stale/expired. user.jwt() refreshes the token first if needed, then
-  // returns a valid one. Using the raw cached token was causing 401s even
-  // right after a successful login.
-  const token = await user.jwt();
-  return { "Authorization": "Bearer " + token };
+  const token = await ensureValidToken();
+  return token ? { "Authorization": "Bearer " + token } : {};
 }
+
+// ---- Direct Identity API auth (no widget) ----
+const SESSION_KEY = 'nsym_admin_session';
+
+function getSession() {
+  const raw = localStorage.getItem(SESSION_KEY);
+  return raw ? JSON.parse(raw) : null;
+}
+function saveTokenResponse(data) {
+  const expires_at = Date.now() + (data.expires_in * 1000) - 60000; // refresh 1 min early
+  localStorage.setItem(SESSION_KEY, JSON.stringify({
+    access_token: data.access_token,
+    refresh_token: data.refresh_token,
+    expires_at
+  }));
+}
+function clearSession() { localStorage.removeItem(SESSION_KEY); }
+
+async function ensureValidToken() {
+  const session = getSession();
+  if (!session) return null;
+  if (Date.now() < session.expires_at) return session.access_token;
+  const res = await fetch('/.netlify/identity/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({ grant_type: 'refresh_token', refresh_token: session.refresh_token })
+  });
+  if (!res.ok) { clearSession(); return null; }
+  const data = await res.json();
+  saveTokenResponse(data);
+  return data.access_token;
+}
+
+function showApp() {
+  document.getElementById('login-gate').classList.add('hidden');
+  document.getElementById('admin-app').classList.remove('hidden');
+  init();
+}
+
+document.getElementById('login-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const msg = document.getElementById('login-msg');
+  msg.className = '';
+  msg.textContent = 'Logging in…';
+  const email = document.getElementById('login-email').value;
+  const password = document.getElementById('login-password').value;
+  try {
+    const res = await fetch('/.netlify/identity/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({ grant_type: 'password', username: email, password: password })
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error_description || err.msg || ('Login failed (' + res.status + ')'));
+    }
+    const data = await res.json();
+    saveTokenResponse(data);
+    msg.textContent = '';
+    showApp();
+  } catch (err) {
+    msg.textContent = err.message;
+    msg.className = 'error';
+  }
+});
+
+document.getElementById('logout-btn').addEventListener('click', () => {
+  clearSession();
+  location.reload();
+});
+
+// If already logged in from a previous visit, skip straight to the app
+if (getSession()) showApp();
 
 async function loadFile(name) {
   const res = await fetch(API_ROOT + name, { headers: await authHeader() });
@@ -334,20 +412,6 @@ async function savePhoto(path, dataUrl) {
   if (!res.ok) throw new Error("Failed to save " + path + " (" + res.status + ")");
 }
 
-netlifyIdentity.on('init', user => {
-  if (user) {
-    document.getElementById('login-gate').classList.add('hidden');
-    document.getElementById('admin-app').classList.remove('hidden');
-    init();
-  }
-});
-netlifyIdentity.on('login', () => {
-  document.getElementById('login-gate').classList.add('hidden');
-  document.getElementById('admin-app').classList.remove('hidden');
-  init();
-});
-netlifyIdentity.on('logout', () => location.reload());
-netlifyIdentity.init();
 </script>
 </body>
 </html>
