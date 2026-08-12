@@ -373,10 +373,17 @@ a.programme-row:hover .title { color: var(--gold-deep); }
   margin-bottom: 26px;
 }
 .ensemble h3 {
-  font-family: var(--display);
-  font-weight: 600;
-  font-size: clamp(1.4rem, 2.8vw, 1.9rem);
-  margin: 0 0 6px;
+  /* Visually hidden — the wordmark logo already shows the name, so a
+     duplicate text heading right below it is redundant. Kept in the DOM
+     (not display:none) so screen readers and search engines still get a
+     proper heading structure for the page. */
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 .ensemble .sub { color: var(--ink-soft); font-size: 0.95rem; margin: 0 0 18px; }
 .ensemble .wordmark {
