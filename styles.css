@@ -526,6 +526,7 @@ a.programme-row:hover .title { color: var(--gold-deep); }
   font-size: clamp(2rem, 5vw, 3rem);
   margin: 16px 0 0;
 }
+.page-hero h1:first-child { margin-top: 0; }
 .page-hero p { color: rgba(244,246,247,0.82); max-width: 52ch; margin-top: 14px; font-size: 1.05rem; }
 
 /* On dark backgrounds (hero, page-hero), eyebrow needs the brighter aqua —
@@ -631,6 +632,7 @@ a.programme-row:hover .title { color: var(--gold-deep); }
   font-size: clamp(2rem, 5vw, 3rem);
   margin: 16px 0 0;
 }
+.page-head h1:first-child { margin-top: 0; }
 .page-head p { color: rgba(244,246,247,0.78); max-width: 52ch; margin-top: 14px; font-size: 1.05rem; }
 
 .prose { max-width: 68ch; }
