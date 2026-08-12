@@ -3,12 +3,14 @@
 :root {
   --ink: #16213A;
   --ink-soft: #3A4256;
-  --cream: #F6F1E4;
+  --cream: #F4F6F7;
   --gold: #00BFDF;
   --gold-deep: #00707F;
   --plum: #5B2A45;
+  --stringalongs-green: #009D4D;
+  --junior-blue: #0172BB;
   --line: rgba(22, 33, 58, 0.14);
-  --line-on-ink: rgba(246, 241, 228, 0.22);
+  --line-on-ink: rgba(244, 246, 247, 0.22);
 
   --display: 'Fraunces', Georgia, serif;
   --body: 'Public Sans', -apple-system, sans-serif;
@@ -92,7 +94,7 @@ img { max-width: 100%; display: block; }
   position: sticky;
   top: 0;
   z-index: 20;
-  background: rgba(246, 241, 228, 0.92);
+  background: rgba(244, 246, 247, 0.92);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--line);
 }
@@ -159,7 +161,7 @@ img { max-width: 100%; display: block; }
   border-color: var(--line-on-ink);
   color: var(--cream);
 }
-.btn-outline:hover { background: rgba(246,241,228,0.08); }
+.btn-outline:hover { background: rgba(244,246,247,0.08); }
 
 .nav-toggle {
   display: none;
@@ -216,7 +218,7 @@ img { max-width: 100%; display: block; }
 }
 .hero p.lede {
   font-size: clamp(1.05rem, 2vw, 1.25rem);
-  color: rgba(246,241,228,0.78);
+  color: rgba(244,246,247,0.78);
   max-width: 46ch;
   margin: 0 0 34px;
 }
@@ -343,7 +345,7 @@ a.programme-row:hover .title { color: var(--gold-deep); }
 
 /* CTA band */
 .cta-band {
-  background: var(--plum);
+  background: var(--junior-blue);
   color: var(--cream);
 }
 .cta-band .wrap {
@@ -395,7 +397,15 @@ a.programme-row:hover .title { color: var(--gold-deep); }
   background: linear-gradient(200deg, rgba(22,33,58,0.85) 0%, rgba(22,33,58,0.55) 45%, rgba(22,33,58,0.25) 75%), linear-gradient(180deg, rgba(22,33,58,0.55), rgba(22,33,58,0.4) 50%, rgba(22,33,58,0.8));
 }
 .ensemble-hero > * { position: relative; z-index: 1; }
-.ensemble-hero .badge { color: var(--cream); border-color: rgba(246,241,228,0.65); }
+.ensemble-hero .badge { color: var(--cream); border-color: rgba(244,246,247,0.65); }
+.ensemble-hero .wordmark {
+  background: rgba(244,246,247,0.94);
+  padding: 8px 16px;
+  border-radius: 4px;
+  height: 52px;
+}
+.badge.stringalongs { border-color: var(--stringalongs-green); }
+.badge.junior { border-color: var(--junior-blue); }
 .ensemble-hero h3 {
   font-family: var(--display);
   font-weight: 600;
@@ -403,7 +413,7 @@ a.programme-row:hover .title { color: var(--gold-deep); }
   color: var(--cream);
   margin: 10px 0 4px;
 }
-.ensemble-hero .sub { color: rgba(246,241,228,0.88); margin: 0; font-size: 1.02rem; }
+.ensemble-hero .sub { color: rgba(244,246,247,0.88); margin: 0; font-size: 1.02rem; }
 .ensemble .headshot {
   width: 132px;
   height: 132px;
@@ -480,7 +490,7 @@ a.programme-row:hover .title { color: var(--gold-deep); }
 .explore-card .go {
   font-family: var(--mono);
   font-size: 12.5px;
-  color: rgba(246,241,228,0.85);
+  color: rgba(244,246,247,0.85);
 }
 
 /* Unified photo hero for inner pages (replaces page-head + page-banner
@@ -508,7 +518,7 @@ a.programme-row:hover .title { color: var(--gold-deep); }
   font-size: clamp(2rem, 5vw, 3rem);
   margin: 16px 0 0;
 }
-.page-hero p { color: rgba(246,241,228,0.82); max-width: 52ch; margin-top: 14px; font-size: 1.05rem; }
+.page-hero p { color: rgba(244,246,247,0.82); max-width: 52ch; margin-top: 14px; font-size: 1.05rem; }
 
 /* On dark backgrounds (hero, page-hero), eyebrow needs the brighter aqua —
    the deep-teal default is for light/cream backgrounds and would be nearly
@@ -613,7 +623,7 @@ a.programme-row:hover .title { color: var(--gold-deep); }
   font-size: clamp(2rem, 5vw, 3rem);
   margin: 16px 0 0;
 }
-.page-head p { color: rgba(246,241,228,0.78); max-width: 52ch; margin-top: 14px; font-size: 1.05rem; }
+.page-head p { color: rgba(244,246,247,0.78); max-width: 52ch; margin-top: 14px; font-size: 1.05rem; }
 
 .prose { max-width: 68ch; }
 .prose p { margin: 0 0 18px; color: var(--ink-soft); }
@@ -662,7 +672,7 @@ a.programme-row:hover .title { color: var(--gold-deep); }
 /* ---------- Footer ---------- */
 .site-footer {
   background: var(--ink);
-  color: rgba(246,241,228,0.7);
+  color: rgba(244,246,247,0.7);
   padding: 40px 0 32px;
 }
 .footer-row {
@@ -673,7 +683,7 @@ a.programme-row:hover .title { color: var(--gold-deep); }
   gap: 16px;
   font-size: 13.5px;
 }
-.footer-row a { text-decoration: none; color: rgba(246,241,228,0.7); }
+.footer-row a { text-decoration: none; color: rgba(244,246,247,0.7); }
 .footer-row a:hover { color: var(--cream); }
 .footer-links { display: flex; gap: 22px; list-style: none; margin: 0; padding: 0; }
 .footer-logo { height: 26px; width: auto; opacity: 0.85; margin-bottom: 18px; }
