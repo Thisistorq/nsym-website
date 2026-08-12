@@ -18,8 +18,16 @@
   // Handles Identity invite/confirmation/recovery links that land on the
   // homepage (Netlify's default redirect target) — without this, tokens in
   // the URL are never processed and the account never gets confirmed.
+  //
+  // Note: for invite_token / recovery_token specifically, the widget's own
+  // automatic handling has been seen to try completing signup with an
+  // empty password instead of showing the form. Forcing the widget open
+  // explicitly when one of these tokens is present works around that.
   if (window.netlifyIdentity) {
     netlifyIdentity.init();
+    if (location.hash && /invite_token=|recovery_token=/.test(location.hash)) {
+      netlifyIdentity.open();
+    }
   }
 </script>
 <header class="site-header">
