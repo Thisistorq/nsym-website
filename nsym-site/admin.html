@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Site Admin — North Shore Youth Music</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" href="images/favicon-32.png" type="image/png">
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+<style>
+  .admin-wrap { max-width: 760px; margin: 0 auto; padding: 40px 20px 80px; }
+  .admin-card {
+    background: #fff; border: 1px solid var(--line); border-radius: 6px;
+    padding: 24px; margin-bottom: 22px;
+  }
+  .admin-card h2 { font-family: var(--display); font-size: 1.3rem; margin: 0 0 18px; }
+  .field { margin-bottom: 16px; }
+  .field label { display: block; font-family: var(--mono); font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gold); margin-bottom: 6px; }
+  .field input[type=text], .field select, .field textarea {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 4px;
+    font-family: var(--body); font-size: 15px; box-sizing: border-box;
+  }
+  .field textarea { min-height: 110px; resize: vertical; font-family: var(--body); line-height: 1.5; }
+  .field .hint { font-family: var(--mono); font-size: 11px; color: var(--ink-soft); margin-top: 5px; text-transform: none; letter-spacing: 0; }
+  .status-row { display: flex; gap: 10px; align-items: flex-start; }
+  .status-row select { flex: 0 0 130px; }
+  .status-row input { flex: 1; }
+  .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 18px; }
+  .photo-field { text-align: center; }
+  .photo-field .thumb {
+    width: 100%; height: 100px; object-fit: cover; border-radius: 4px;
+    border: 1px solid var(--line); margin-bottom: 8px; display: block; background: #eee;
+  }
+  .photo-field label { display: block; font-family: var(--mono); font-size: 11px; color: var(--ink-soft); margin-bottom: 6px; text-transform: none; letter-spacing: 0; }
+  .photo-field input[type=file] { font-size: 12px; width: 100%; }
+  .photo-field.changed .thumb { outline: 2px solid var(--gold); }
+  #save-bar {
+    position: sticky; bottom: 0; background: var(--cream);
+    border-top: 1px solid var(--line); padding: 16px 0; margin-top: 20px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  #save-msg { font-family: var(--mono); font-size: 13px; color: var(--ink-soft); }
+  #login-gate { max-width: 380px; margin: 100px auto; padding: 0 20px; text-align: left; }
+  #login-gate .field { margin-bottom: 16px; }
+  #login-gate input {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 4px;
+    font-family: var(--body); font-size: 15px; box-sizing: border-box;
+  }
+  #login-msg { font-family: var(--mono); font-size: 13px; margin-top: 12px; }
+  #login-msg.error { color: #b3261e; }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav">
+    <a href="index.html" class="brand"><img src="images/logo-dark.png" alt="North Shore Youth Music"></a>
+    <span style="font-family:var(--mono); font-size:12px; color:var(--ink-soft);">Admin</span>
+  </nav>
+</header>
+
+<div id="login-gate">
+  <p style="font-family:var(--display); font-size:1.4rem; margin-bottom:20px;">Sign in to edit the site</p>
+  <form id="login-form">
+    <div class="field"><label>Email</label><input type="email" id="login-email" required autocomplete="username"></div>
+    <div class="field"><label>Password</label><input type="password" id="login-password" required autocomplete="current-password"></div>
+    <button type="submit" class="btn btn-gold">Log in</button>
+    <div id="login-msg"></div>
+  </form>
+</div>
+
+<div id="admin-app" class="admin-wrap hidden">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+    <p style="font-family:var(--display); font-size:1.4rem; margin:0;">Edit site content</p>
+    <button class="btn btn-outline" style="color:var(--ink); border-color:var(--line);" id="logout-btn">Log out</button>
+  </div>
+  <p id="load-msg" style="color:var(--ink-soft);">Loading current content&hellip;</p>
+
+  <form id="edit-form" class="hidden">
+
+    <div class="admin-card">
+      <h2>Choirs</h2>
+      <div class="field"><label>Songsters — Rehearsal A</label><input type="text" data-file="choirs.html" data-id="f-songsters-rehearsal-a"></div>
+      <div class="field"><label>Songsters — Rehearsal B</label><input type="text" data-file="choirs.html" data-id="f-songsters-rehearsal-b"></div>
+      <div class="field"><label>Songsters — Fee</label><input type="text" data-file="choirs.html" data-id="f-songsters-fee"></div>
+      <div class="field"><label>Songsters — Description</label>
+        <textarea data-file="choirs.html" data-id="d-songsters" data-type="desc"></textarea>
+        <div class="hint">Leave a blank line between paragraphs. (The "no audition, apply here" line below this on the site is fixed and not editable here.)</div>
+      </div>
+      <div class="field"><label>Children's Choir — Rehearsal</label><input type="text" data-file="choirs.html" data-id="f-cc-rehearsal"></div>
+      <div class="field"><label>Children's Choir — Fee</label><input type="text" data-file="choirs.html" data-id="f-cc-fee"></div>
+      <div class="field"><label>Children's Choir — Description</label>
+        <textarea data-file="choirs.html" data-id="d-cc" data-type="desc"></textarea>
+        <div class="hint">Leave a blank line between paragraphs.</div>
+      </div>
+      <div class="field"><label>Con Brio — Rehearsal</label><input type="text" data-file="choirs.html" data-id="f-cb-rehearsal"></div>
+      <div class="field"><label>Con Brio — Fee</label><input type="text" data-file="choirs.html" data-id="f-cb-fee"></div>
+      <div class="field"><label>Con Brio — Description</label>
+        <textarea data-file="choirs.html" data-id="d-cb" data-type="desc"></textarea>
+        <div class="hint">Leave a blank line between paragraphs.</div>
+      </div>
+    </div>
+
+    <div class="admin-card">
+      <h2>Orchestras</h2>
+      <div class="field"><label>Stringalongs — Rehearsal</label><input type="text" data-file="orchestras.html" data-id="f-sa-rehearsal"></div>
+      <div class="field"><label>Stringalongs — Fee</label><input type="text" data-file="orchestras.html" data-id="f-sa-fee"></div>
+      <div class="field"><label>Stringalongs — Description</label>
+        <textarea data-file="orchestras.html" data-id="d-sa" data-type="desc"></textarea>
+        <div class="hint">Leave a blank line between paragraphs. (The "how to join" line above this on the site is fixed and not editable here.)</div>
+      </div>
+      <div class="field"><label>Junior Orchestra — Rehearsal</label><input type="text" data-file="orchestras.html" data-id="f-jo-rehearsal"></div>
+      <div class="field"><label>Junior Orchestra — Fee (1 child)</label><input type="text" data-file="orchestras.html" data-id="f-jo-fee1"></div>
+      <div class="field"><label>Junior Orchestra — Fee (2 children)</label><input type="text" data-file="orchestras.html" data-id="f-jo-fee2"></div>
+      <div class="field"><label>Junior Orchestra — Description</label>
+        <textarea data-file="orchestras.html" data-id="d-jo" data-type="desc"></textarea>
+        <div class="hint">Leave a blank line between paragraphs.</div>
+      </div>
+    </div>
+
+    <div class="admin-card">
+      <h2>Apply page — intake status</h2>
+      <div class="field"><label>Status updated label (e.g. "Status updated March 2026")</label>
+        <input type="text" data-file="apply.html" data-id="status-date" data-type="text">
+      </div>
+      <div class="field"><label>Songsters</label>
+        <div class="status-row">
+          <select data-file="apply.html" data-id="s-songsters" data-type="status-select"><option value="open">Open</option><option value="waitlist">Waitlist</option><option value="closed">Closed</option></select>
+          <input type="text" data-file="apply.html" data-id="s-songsters" data-type="status-text">
+        </div>
+      </div>
+      <div class="field"><label>Children's Choir</label>
+        <div class="status-row">
+          <select data-file="apply.html" data-id="s-childrens-choir" data-type="status-select"><option value="open">Open</option><option value="waitlist">Waitlist</option><option value="closed">Closed</option></select>
+          <input type="text" data-file="apply.html" data-id="s-childrens-choir" data-type="status-text">
+        </div>
+      </div>
+      <div class="field"><label>Junior Orchestra</label>
+        <div class="status-row">
+          <select data-file="apply.html" data-id="s-junior-orchestra" data-type="status-select"><option value="open">Open</option><option value="waitlist">Waitlist</option><option value="closed">Closed</option></select>
+          <input type="text" data-file="apply.html" data-id="s-junior-orchestra" data-type="status-text">
+        </div>
+      </div>
+      <div class="field"><label>Stringalongs</label>
+        <div class="status-row">
+          <select data-file="apply.html" data-id="s-stringalongs" data-type="status-select"><option value="open">Open</option><option value="waitlist">Waitlist</option><option value="closed">Closed</option></select>
+          <input type="text" data-file="apply.html" data-id="s-stringalongs" data-type="status-text">
+        </div>
+      </div>
+      <div class="field"><label>Con Brio</label>
+        <div class="status-row">
+          <select data-file="apply.html" data-id="s-con-brio" data-type="status-select"><option value="open">Open</option><option value="waitlist">Waitlist</option><option value="closed">Closed</option></select>
+          <input type="text" data-file="apply.html" data-id="s-con-brio" data-type="status-text">
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-card">
+      <h2>Musical Directors — bios</h2>
+      <div class="field"><label>David Kay — Bio</label>
+        <textarea data-file="musical-directors.html" data-id="d-david-kay" data-type="desc"></textarea>
+        <div class="hint">Leave a blank line between paragraphs.</div>
+      </div>
+      <div class="field"><label>Vanessa Kay — Bio</label>
+        <textarea data-file="musical-directors.html" data-id="d-vanessa-kay" data-type="desc"></textarea>
+        <div class="hint">Leave a blank line between paragraphs.</div>
+      </div>
+    </div>
+
+    <div class="admin-card">
+      <h2>Contact page</h2>
+      <p style="color:var(--ink-soft); font-size:0.9rem; margin-top:-10px; margin-bottom:20px;">Note: these only update the Contact page itself. The phone/email shown in the footer on every other page are separate and won't change automatically — let Carl know if those need updating too.</p>
+      <div class="field"><label>Email address</label>
+        <input type="text" data-file="contact.html" data-id="c-email" data-type="email">
+      </div>
+      <div class="field"><label>Phone number</label>
+        <input type="text" data-file="contact.html" data-id="c-phone" data-type="phone">
+      </div>
+      <div class="field"><label>Facebook — link</label>
+        <input type="text" data-file="contact.html" data-id="c-facebook" data-type="href">
+      </div>
+      <div class="field"><label>Facebook — text shown</label>
+        <input type="text" data-file="contact.html" data-id="c-facebook" data-type="linktext">
+      </div>
+      <div class="field"><label>YouTube — link</label>
+        <input type="text" data-file="contact.html" data-id="c-youtube" data-type="href">
+      </div>
+      <div class="field"><label>YouTube — text shown</label>
+        <input type="text" data-file="contact.html" data-id="c-youtube" data-type="linktext">
+      </div>
+    </div>
+
+    <div class="admin-card">
+      <h2>Photos</h2>
+      <p style="color:var(--ink-soft); font-size:0.9rem; margin-top:-10px; margin-bottom:20px;">Pick a new photo to replace any of these — it swaps out the current one automatically. Best results: similar shape/orientation to what's there now.</p>
+      <div class="photo-grid" id="photo-grid">
+        <div class="photo-field"><label>Homepage banner</label><img class="thumb" src="images/home-banner.jpg"><input type="file" accept="image/*" data-path="images/home-banner.jpg"></div>
+        <div class="photo-field"><label>Homepage &rarr; Choirs card</label><img class="thumb" src="images/home-card-choirs.jpg"><input type="file" accept="image/*" data-path="images/home-card-choirs.jpg"></div>
+        <div class="photo-field"><label>Homepage &rarr; Orchestras card</label><img class="thumb" src="images/home-card-orchestras.jpg"><input type="file" accept="image/*" data-path="images/home-card-orchestras.jpg"></div>
+        <div class="photo-field"><label>Carousel photo 1</label><img class="thumb" src="images/home-photo-01.jpg"><input type="file" accept="image/*" data-path="images/home-photo-01.jpg"></div>
+        <div class="photo-field"><label>Carousel photo 2</label><img class="thumb" src="images/home-photo-02.jpg"><input type="file" accept="image/*" data-path="images/home-photo-02.jpg"></div>
+        <div class="photo-field"><label>Carousel photo 3</label><img class="thumb" src="images/home-photo-03.jpg"><input type="file" accept="image/*" data-path="images/home-photo-03.jpg"></div>
+        <div class="photo-field"><label>Carousel photo 4</label><img class="thumb" src="images/home-photo-04.jpg"><input type="file" accept="image/*" data-path="images/home-photo-04.jpg"></div>
+        <div class="photo-field"><label>Carousel photo 5</label><img class="thumb" src="images/home-photo-05.jpg"><input type="file" accept="image/*" data-path="images/home-photo-05.jpg"></div>
+        <div class="photo-field"><label>Carousel photo 6</label><img class="thumb" src="images/home-photo-06.jpg"><input type="file" accept="image/*" data-path="images/home-photo-06.jpg"></div>
+        <div class="photo-field"><label>Carousel photo 7</label><img class="thumb" src="images/home-photo-07.jpg"><input type="file" accept="image/*" data-path="images/home-photo-07.jpg"></div>
+        <div class="photo-field"><label>Carousel photo 8</label><img class="thumb" src="images/home-photo-08.jpg"><input type="file" accept="image/*" data-path="images/home-photo-08.jpg"></div>
+        <div class="photo-field"><label>Songsters photo</label><img class="thumb" src="images/choirs-photo-1.jpg"><input type="file" accept="image/*" data-path="images/choirs-photo-1.jpg"></div>
+        <div class="photo-field"><label>Children's Choir photo</label><img class="thumb" src="images/choirs-photo-2.jpg"><input type="file" accept="image/*" data-path="images/choirs-photo-2.jpg"></div>
+        <div class="photo-field"><label>Con Brio photo</label><img class="thumb" src="images/choirs-photo-3.jpg"><input type="file" accept="image/*" data-path="images/choirs-photo-3.jpg"></div>
+        <div class="photo-field"><label>Stringalongs photo</label><img class="thumb" src="images/orchestras-photo-1.jpg"><input type="file" accept="image/*" data-path="images/orchestras-photo-1.jpg"></div>
+        <div class="photo-field"><label>Junior Orchestra photo</label><img class="thumb" src="images/orchestras-photo-2.jpg"><input type="file" accept="image/*" data-path="images/orchestras-photo-2.jpg"></div>
+        <div class="photo-field"><label>David Kay photo</label><img class="thumb" src="images/directors-david-kay.jpg"><input type="file" accept="image/*" data-path="images/directors-david-kay.jpg"></div>
+        <div class="photo-field"><label>Vanessa Kay photo</label><img class="thumb" src="images/directors-vanessa-kay.jpg"><input type="file" accept="image/*" data-path="images/directors-vanessa-kay.jpg"></div>
+        <div class="photo-field"><label>Contact page banner</label><img class="thumb" src="images/contact-banner.jpg"><input type="file" accept="image/*" data-path="images/contact-banner.jpg"></div>
+      </div>
+    </div>
+
+    <div id="save-bar">
+      <button type="submit" class="btn btn-gold">Save changes</button>
+      <span id="save-msg"></span>
+    </div>
+  </form>
+</div>
+
+<script>
+// Content reads/writes go through our own Netlify Function
+// (netlify/functions/github-content.js), which holds the real GitHub
+// token as a server-side environment variable — the browser never sees
+// it. Earlier approaches (Netlify's Git Gateway, then embedding the token
+// directly in this page) both failed: Git Gateway hit a platform-level
+// restriction, and GitHub's own secret-scanning auto-revoked the embedded
+// token within moments of it being committed.
+const API_ROOT = "/.netlify/functions/github-content?path=";
+const FILES = ["choirs.html", "orchestras.html", "apply.html", "musical-directors.html", "contact.html"];
+let fileCache = {}; // filename -> { content, sha }
+
+// ---- Direct Identity API auth (no widget) ----
+// This still gates who can get into the page at all (a real login is
+// required), even though the GitHub writes above use the embedded token
+// rather than this session once inside.
+const SESSION_KEY = 'nsym_admin_session';
+
+function getSession() {
+  const raw = localStorage.getItem(SESSION_KEY);
+  return raw ? JSON.parse(raw) : null;
+}
+function saveTokenResponse(data) {
+  const expires_at = Date.now() + (data.expires_in * 1000) - 60000; // refresh 1 min early
+  localStorage.setItem(SESSION_KEY, JSON.stringify({
+    access_token: data.access_token,
+    refresh_token: data.refresh_token,
+    expires_at
+  }));
+}
+function clearSession() { localStorage.removeItem(SESSION_KEY); }
+
+async function ensureValidToken() {
+  const session = getSession();
+  if (!session) return null;
+  if (Date.now() < session.expires_at) return session.access_token;
+  const res = await fetch('/.netlify/identity/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({ grant_type: 'refresh_token', refresh_token: session.refresh_token })
+  });
+  if (!res.ok) { clearSession(); return null; }
+  const data = await res.json();
+  saveTokenResponse(data);
+  return data.access_token;
+}
+
+function showApp() {
+  document.getElementById('login-gate').classList.add('hidden');
+  document.getElementById('admin-app').classList.remove('hidden');
+  init();
+}
+
+document.getElementById('login-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const msg = document.getElementById('login-msg');
+  msg.className = '';
+  msg.textContent = 'Logging in…';
+  const email = document.getElementById('login-email').value;
+  const password = document.getElementById('login-password').value;
+  try {
+    const res = await fetch('/.netlify/identity/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({ grant_type: 'password', username: email, password: password })
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error_description || err.msg || ('Login failed (' + res.status + ')'));
+    }
+    const data = await res.json();
+    saveTokenResponse(data);
+    msg.textContent = '';
+    showApp();
+  } catch (err) {
+    msg.textContent = err.message;
+    msg.className = 'error';
+  }
+});
+
+document.getElementById('logout-btn').addEventListener('click', () => {
+  clearSession();
+  location.reload();
+});
+
+// If already logged in from a previous visit, skip straight to the app
+if (getSession()) showApp();
+
+async function loadFile(name) {
+  const res = await fetch(API_ROOT + name);
+  if (!res.ok) throw new Error("Failed to load " + name + " (" + res.status + ")");
+  const data = await res.json();
+  const content = atob(data.content.replace(/\n/g, ""));
+  fileCache[name] = { content, sha: data.sha };
+}
+
+function getFieldValue(content, id) {
+  const re = new RegExp('id="' + id + '"[^>]*>([\\s\\S]*?)<\\/(span|input)>', 'i');
+  // For simple <span id="...">TEXT</span> fields
+  const simple = new RegExp('id="' + id + '">([\\s\\S]*?)</span>', 'i');
+  const m = content.match(simple);
+  return m ? m[1] : null;
+}
+
+function getStatusValue(content, id) {
+  // <span id="s-x"><span class="badge STATUS">LABEL</span> TEXT</span>
+  const re = new RegExp('id="' + id + '"><span class="badge (\\w+)">\\w+</span>\\s*([\\s\\S]*?)</span>', 'i');
+  const m = content.match(re);
+  return m ? { status: m[1], text: m[2].trim() } : null;
+}
+
+function getDescValue(content, id) {
+  // <div class="desc-edit" id="ID"> <p>...</p> <p>...</p> </div>
+  const re = new RegExp('<div class="desc-edit" id="' + id + '">([\\s\\S]*?)</div>', 'i');
+  const m = content.match(re);
+  if (!m) return null;
+  const paras = m[1].trim().split(/<\/p>\s*<p>/i).map(p =>
+    p.replace(/^\s*<p>/i, '').replace(/<\/p>\s*$/i, '').trim()
+  );
+  return paras.join('\n\n');
+}
+
+function setDescValue(content, id, text) {
+  const paras = text.split(/\n\s*\n/).map(p => p.trim()).filter(Boolean);
+  const inner = '\n      ' + paras.map(p => '<p>' + p + '</p>').join('\n      ') + '\n      ';
+  const re = new RegExp('(<div class="desc-edit" id="' + id + '">)([\\s\\S]*?)(</div>)', 'i');
+  return content.replace(re, (m, a, b, c) => a + inner + c);
+}
+
+function getLinkValue(content, id) {
+  // <a href="HREF" id="ID">TEXT</a>
+  const re = new RegExp('<a href="([^"]*)" id="' + id + '">([^<]*)</a>', 'i');
+  const m = content.match(re);
+  return m ? { href: m[1], text: m[2] } : null;
+}
+
+function setLinkValue(content, id, href, text) {
+  const re = new RegExp('(<a href=")[^"]*("\\s+id="' + id + '">)[^<]*(</a>)', 'i');
+  return content.replace(re, (m, a, b, c) => a + href + b + text + c);
+}
+
+function populateForm() {
+  document.querySelectorAll('[data-id]').forEach(el => {
+    const file = el.dataset.file;
+    const id = el.dataset.id;
+    const type = el.dataset.type;
+    const content = fileCache[file].content;
+    if (type === "status-select") {
+      const v = getStatusValue(content, id);
+      if (v) el.value = v.status;
+    } else if (type === "status-text") {
+      const v = getStatusValue(content, id);
+      if (v) el.value = v.text;
+    } else if (type === "desc") {
+      const v = getDescValue(content, id);
+      if (v !== null) el.value = v;
+    } else if (type === "email" || type === "phone") {
+      const v = getLinkValue(content, id);
+      if (v) el.value = v.text;
+    } else if (type === "href") {
+      const v = getLinkValue(content, id);
+      if (v) el.value = v.href;
+    } else if (type === "linktext") {
+      const v = getLinkValue(content, id);
+      if (v) el.value = v.text;
+    } else {
+      const v = getFieldValue(content, id);
+      if (v !== null) el.value = v;
+    }
+  });
+}
+
+function applyEdits() {
+  const edited = {};
+  FILES.forEach(f => edited[f] = fileCache[f].content);
+
+  // simple text fields
+  document.querySelectorAll('input[type=text]:not([data-type])').forEach(el => {
+    const file = el.dataset.file, id = el.dataset.id;
+    const re = new RegExp('(id="' + id + '">)([\\s\\S]*?)(</span>)', 'i');
+    edited[file] = edited[file].replace(re, (m, a, b, c) => a + el.value + c);
+  });
+
+  // status date label
+  document.querySelectorAll('[data-type="text"]').forEach(el => {
+    const file = el.dataset.file, id = el.dataset.id;
+    const re = new RegExp('(id="' + id + '">)([\\s\\S]*?)(</span>)', 'i');
+    edited[file] = edited[file].replace(re, (m, a, b, c) => a + el.value + c);
+  });
+
+  // description textareas
+  document.querySelectorAll('textarea[data-type="desc"]').forEach(el => {
+    const file = el.dataset.file, id = el.dataset.id;
+    edited[file] = setDescValue(edited[file], id, el.value);
+  });
+
+  // email field: one input controls both mailto: href and displayed text
+  document.querySelectorAll('input[data-type="email"]').forEach(el => {
+    const file = el.dataset.file, id = el.dataset.id;
+    const value = el.value.trim();
+    edited[file] = setLinkValue(edited[file], id, "mailto:" + value, value);
+  });
+
+  // phone field: one input controls both tel: href (digits only) and displayed text
+  document.querySelectorAll('input[data-type="phone"]').forEach(el => {
+    const file = el.dataset.file, id = el.dataset.id;
+    const value = el.value.trim();
+    edited[file] = setLinkValue(edited[file], id, "tel:" + value.replace(/\D/g, ''), value);
+  });
+
+  // href/linktext pairs: two separate inputs sharing the same data-id
+  const linkIds = [...new Set([...document.querySelectorAll('[data-type=href]')].map(e => e.dataset.id))];
+  linkIds.forEach(id => {
+    const hrefInput = document.querySelector('input[data-type=href][data-id="' + id + '"]');
+    const textInput = document.querySelector('input[data-type=linktext][data-id="' + id + '"]');
+    const file = hrefInput.dataset.file;
+    edited[file] = setLinkValue(edited[file], id, hrefInput.value.trim(), textInput.value);
+  });
+
+  // status blocks: pair select + text by data-id
+  const statusIds = [...new Set([...document.querySelectorAll('[data-type=status-select]')].map(e => e.dataset.id))];
+  statusIds.forEach(id => {
+    const select = document.querySelector('select[data-id="' + id + '"]');
+    const text = document.querySelector('input[data-type=status-text][data-id="' + id + '"]');
+    const file = select.dataset.file;
+    const labelMap = { open: "Open", waitlist: "Waitlist", closed: "Closed" };
+    const re = new RegExp('(id="' + id + '"><span class="badge )\\w+(">)\\w+(</span>\\s*)[\\s\\S]*?(</span>)', 'i');
+    edited[file] = edited[file].replace(re, (m, a, b, c, d) =>
+      a + select.value + b + labelMap[select.value] + c + text.value + d);
+  });
+
+  return edited;
+}
+
+async function saveFile(name, content, sha) {
+  const res = await fetch(API_ROOT + name, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      message: "Update " + name + " via admin panel",
+      content: btoa(unescape(encodeURIComponent(content))),
+      sha: sha
+    })
+  });
+  if (!res.ok) throw new Error("Failed to save " + name + " (" + res.status + ")");
+}
+
+document.getElementById('edit-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const msg = document.getElementById('save-msg');
+  msg.textContent = "Saving…";
+  try {
+    const edited = applyEdits();
+    for (const file of FILES) {
+      if (edited[file] !== fileCache[file].content) {
+        await saveFile(file, edited[file], fileCache[file].sha);
+      }
+    }
+    const photoPaths = Object.keys(pendingPhotos);
+    for (const path of photoPaths) {
+      await savePhoto(path, pendingPhotos[path].dataUrl);
+      delete pendingPhotos[path];
+    }
+    document.querySelectorAll('.photo-field.changed').forEach(f => f.classList.remove('changed'));
+    msg.textContent = "Saved! Live in about 10\u201330 seconds.";
+    await init(); // refresh cache/sha for further edits
+  } catch (err) {
+    msg.textContent = "Error: " + err.message;
+  }
+});
+
+async function init() {
+  const loadMsg = document.getElementById('load-msg');
+  loadMsg.textContent = "Loading current content…";
+  loadMsg.classList.remove('hidden');
+  try {
+    for (const f of FILES) await loadFile(f);
+    populateForm();
+    loadMsg.classList.add('hidden');
+    document.getElementById('edit-form').classList.remove('hidden');
+  } catch (err) {
+    loadMsg.textContent = "Couldn't load content: " + err.message + " — try logging out and back in, or let Carl know.";
+  }
+}
+
+// ---- Photo uploads ----
+const pendingPhotos = {}; // path -> { file, dataUrl }
+
+document.querySelectorAll('#photo-grid input[type=file]').forEach(input => {
+  input.addEventListener('change', () => {
+    const file = input.files[0];
+    if (!file) return;
+    const path = input.dataset.path;
+    const reader = new FileReader();
+    reader.onload = () => {
+      pendingPhotos[path] = { file, dataUrl: reader.result };
+      const field = input.closest('.photo-field');
+      field.querySelector('.thumb').src = reader.result;
+      field.classList.add('changed');
+    };
+    reader.readAsDataURL(file);
+  });
+});
+
+async function savePhoto(path, dataUrl) {
+  const base64 = dataUrl.split(',')[1];
+  // Need the current sha to update an existing file
+  const getRes = await fetch(API_ROOT + path);
+  const sha = getRes.ok ? (await getRes.json()).sha : undefined;
+  const body = { message: "Update " + path + " via admin panel", content: base64 };
+  if (sha) body.sha = sha;
+  const res = await fetch(API_ROOT + path, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body)
+  });
+  if (!res.ok) throw new Error("Failed to save " + path + " (" + res.status + ")");
+}
+
+</script>
+</body>
+</html>

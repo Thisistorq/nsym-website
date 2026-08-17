@@ -1,0 +1,721 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root {
+  --ink: #16213A;
+  --ink-soft: #3A4256;
+  --cream: #F4F6F7;
+  --gold: #00BFDF;
+  --gold-deep: #00707F;
+  --plum: #5B2A45;
+  --stringalongs-green: #009D4D;
+  --junior-blue: #0172BB;
+  --songsters-gold: #F3BC3E;
+  --childrens-choir-lime: #B2C537;
+  --con-brio-pink: #DC357D;
+  --line: rgba(22, 33, 58, 0.14);
+  --line-on-ink: rgba(244, 246, 247, 0.22);
+
+  --display: 'Fraunces', Georgia, serif;
+  --body: 'Public Sans', -apple-system, sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  --max: 1180px;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+body {
+  margin: 0;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; }
+img { max-width: 100%; display: block; }
+
+.wrap {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 clamp(20px, 5vw, 56px);
+}
+
+/* ---------- Eyebrow / mono labels ---------- */
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.eyebrow::before {
+  content: "";
+  width: 22px;
+  height: 1px;
+  background: currentColor;
+  display: inline-block;
+}
+
+/* ---------- Stave motif ----------
+   Five thin rules, like a music staff. Used as a section divider and
+   as ambient texture behind headlines. Draws in on load. */
+.stave {
+  --stave-color: var(--line);
+  display: block;
+  width: 100%;
+  height: 34px;
+  overflow: visible;
+}
+.stave.on-ink { --stave-color: var(--line-on-ink); }
+.stave line {
+  stroke: var(--stave-color);
+  stroke-width: 1;
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: draw 1.4s ease forwards;
+}
+.stave line:nth-child(2) { animation-delay: 0.05s; }
+.stave line:nth-child(3) { animation-delay: 0.1s; }
+.stave line:nth-child(4) { animation-delay: 0.15s; }
+.stave line:nth-child(5) { animation-delay: 0.2s; }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+
+/* ---------- Header / nav ---------- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(244, 246, 247, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px clamp(20px, 5vw, 56px);
+  max-width: var(--max);
+  margin: 0 auto;
+}
+.brand {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 19px;
+  text-decoration: none;
+  letter-spacing: -0.01em;
+  display: inline-flex;
+  align-items: center;
+}
+.brand img { height: 64px; width: auto; }
+
+.nav-links {
+  display: flex;
+  gap: clamp(16px, 3vw, 34px);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+}
+.nav-links a:not(.btn) {
+  text-decoration: none;
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--ink-soft);
+  position: relative;
+  padding: 4px 0;
+}
+.nav-links a:hover, .nav-links a[aria-current="page"] { color: var(--ink); }
+.nav-links a[aria-current="page"]::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 2px;
+  background: var(--gold-deep);
+}
+.nav-links .btn { padding: 9px 24px; }
+.btn {
+  font-family: var(--body);
+  font-weight: 600;
+  font-size: 14.5px;
+  text-decoration: none;
+  padding: 12px 26px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  display: inline-block;
+  line-height: 1.3;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.btn-gold {
+  background: var(--gold);
+  color: var(--ink);
+}
+.btn-gold:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,191,223,0.35); }
+.btn-outline {
+  border-color: var(--line-on-ink);
+  color: var(--cream);
+}
+.btn-outline:hover { background: rgba(244,246,247,0.08); }
+
+.nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+}
+.nav-toggle span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--ink);
+  margin: 5px 0;
+}
+
+@media (max-width: 780px) {
+  .nav-toggle { display: block; }
+  .nav-links {
+    position: fixed;
+    inset: 64px 0 auto 0;
+    background: var(--cream);
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px clamp(20px, 5vw, 56px) 28px;
+    border-bottom: 1px solid var(--line);
+    display: none;
+    gap: 18px;
+  }
+  .nav-links.open { display: flex; }
+}
+
+/* ---------- Hero ---------- */
+.hero {
+  background: linear-gradient(115deg, rgba(22,33,58,0.85) 0%, rgba(22,33,58,0.6) 42%, rgba(22,33,58,0.25) 68%), linear-gradient(180deg, rgba(22,33,58,0.5), rgba(22,33,58,0.92) 65%, var(--ink) 100%), var(--ink) url("images/home-banner.jpg") center 15% / cover no-repeat;
+  color: var(--cream);
+  padding: clamp(56px, 10vw, 108px) 0 clamp(40px, 7vw, 72px);
+  position: relative;
+}
+.hero .stave { margin-bottom: 28px; opacity: 0.9; }
+.hero h1 {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(2.4rem, 6vw, 4.1rem);
+  line-height: 1.04;
+  letter-spacing: -0.01em;
+  margin: 0 0 22px;
+  max-width: 14ch;
+}
+.hero h1 em {
+  font-style: italic;
+  font-weight: 500;
+  color: var(--gold);
+}
+.hero p.lede {
+  font-size: clamp(1.05rem, 2vw, 1.25rem);
+  color: rgba(244,246,247,0.78);
+  max-width: 46ch;
+  margin: 0 0 34px;
+}
+.hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+
+/* ---------- Sections ---------- */
+section { padding: clamp(52px, 8vw, 92px) 0; }
+section.section-tight-top { padding-top: clamp(28px, 4vw, 44px); }
+section + section { border-top: 1px solid var(--line); }
+.section-head { margin-bottom: 40px; max-width: 60ch; }
+.section-head h2 {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(1.7rem, 3.4vw, 2.5rem);
+  margin: 14px 0 0;
+  letter-spacing: -0.01em;
+}
+.section-head p { color: var(--ink-soft); margin-top: 12px; font-size: 1.05rem; }
+
+/* Quote / press line from the original site */
+.quote {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(1.15rem, 2.4vw, 1.5rem);
+  max-width: 34ch;
+  color: var(--ink);
+  border-left: 2px solid var(--gold-deep);
+  padding-left: 22px;
+  margin: 0 0 44px;
+}
+.quote cite {
+  display: block;
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-top: 12px;
+}
+
+/* Ensemble / programme list — numbered because this genuinely mirrors
+   a concert programme's running order */
+.programme { list-style: none; margin: 0; padding: 0; }
+.programme li {
+  padding: 22px 0;
+  border-top: 1px solid var(--line);
+}
+.programme li:last-child { border-bottom: 1px solid var(--line); }
+.programme .num {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--gold-deep);
+  letter-spacing: 0.05em;
+}
+.programme .title {
+  font-family: var(--display);
+  font-size: clamp(1.15rem, 2.4vw, 1.5rem);
+  font-weight: 500;
+}
+.programme .desc { color: var(--ink-soft); font-size: 0.95rem; margin-top: 4px; }
+.programme .go {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+a.programme-row {
+  display: grid;
+  grid-template-columns: 64px 1fr auto;
+  align-items: baseline;
+  gap: 18px;
+  text-decoration: none;
+  color: inherit;
+}
+a.programme-row:hover .title { color: var(--gold-deep); }
+@media (max-width: 600px) {
+  a.programme-row { grid-template-columns: 32px 1fr; }
+  a.programme-row .go { display: none; }
+}
+
+/* Photo grid */
+.grid-photos {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+.grid-photos img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  object-position: center 20%;
+  border-radius: 2px;
+}
+@media (max-width: 860px) {
+  .grid-photos { grid-template-columns: repeat(2, 1fr); }
+  .grid-photos img { height: 170px; }
+}
+
+/* Photo carousel (homepage) */
+.carousel { position: relative; margin: 0 calc(-1 * clamp(20px, 5vw, 56px)); overflow: hidden; }
+.carousel-track {
+  display: flex;
+  gap: 14px;
+  width: max-content;
+  padding: 4px clamp(20px, 5vw, 56px) 16px;
+  animation: carousel-scroll 42s linear infinite;
+}
+.carousel:hover .carousel-track { animation-play-state: paused; }
+@keyframes carousel-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.carousel-track img {
+  flex: 0 0 auto;
+  width: min(320px, 76vw);
+  height: 240px;
+  object-fit: cover;
+  object-position: center 20%;
+  border-radius: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .carousel-track { animation: none; overflow-x: auto; }
+}
+
+/* CTA band */
+.cta-band {
+  background: var(--junior-blue);
+  color: var(--cream);
+}
+.cta-band .wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+.cta-band h2 {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(1.6rem, 3.2vw, 2.2rem);
+  margin: 0;
+  max-width: 20ch;
+}
+
+/* Ensemble detail blocks (choirs / orchestras pages) — card container so
+   each ensemble is visually self-contained, not just separated by a line */
+.ensemble-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 22px;
+  align-items: start;
+}
+.ensemble {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: clamp(20px, 3vw, 28px);
+  margin-bottom: 0;
+}
+.ensemble .facts { flex-direction: column; gap: 12px; }
+.ensemble p { font-size: 0.95rem; }
+.ensemble h3 {
+  /* Visually hidden — the wordmark logo already shows the name, so a
+     duplicate text heading right below it is redundant. Kept in the DOM
+     (not display:none) so screen readers and search engines still get a
+     proper heading structure for the page. */
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.ensemble .sub { color: var(--ink-soft); font-size: 0.95rem; margin: 0 0 18px; }
+.ensemble .wordmark {
+  height: 88px;
+  width: auto;
+  margin-bottom: 16px;
+}
+.ensemble .badge { margin-bottom: 0; }
+.ensemble-cta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+.ensemble-cta .btn { padding: 8px 20px; font-size: 13.5px; }
+.badge.stringalongs { border-color: var(--stringalongs-green); color: var(--stringalongs-green); }
+.badge.junior { border-color: var(--junior-blue); color: var(--junior-blue); }
+
+/* Each ensemble's Apply button matches its own logo color */
+.ensemble.songsters .ensemble-cta .btn { background: var(--songsters-gold); color: var(--ink); }
+.ensemble.childrens-choir .ensemble-cta .btn { background: var(--childrens-choir-lime); color: var(--ink); }
+.ensemble.con-brio .ensemble-cta .btn { background: var(--con-brio-pink); color: var(--cream); }
+.ensemble.stringalongs .ensemble-cta .btn { background: var(--stringalongs-green); color: var(--cream); }
+.ensemble.junior-orch .ensemble-cta .btn { background: var(--junior-blue); color: var(--cream); }
+.ensemble .headshot {
+  width: 132px;
+  height: 132px;
+  object-fit: cover;
+  object-position: center 15%;
+  border-radius: 3px;
+  float: left;
+  margin: 0 22px 12px 0;
+  shape-outside: margin-box;
+}
+.ensemble .ensemble-photo {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  object-position: center 22%;
+  border-radius: 4px;
+  margin: 4px 0 22px;
+}
+@media (max-width: 560px) {
+  .ensemble .headshot { float: none; display: block; margin-bottom: 16px; }
+}
+
+/* Page banner photo (below page-head) */
+.page-banner {
+  width: 100%;
+  height: clamp(220px, 34vw, 420px);
+  object-fit: cover;
+  object-position: center 18%;
+  display: block;
+}
+
+/* Homepage explore cards — two photo links to Choirs / Orchestras */
+.explore-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 700px) {
+  .explore-grid { grid-template-columns: 1fr; }
+}
+.explore-card {
+  position: relative;
+  display: block;
+  height: 320px;
+  border-radius: 4px;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center 25%;
+  text-decoration: none;
+}
+.explore-card.choirs { background-image: url("images/home-card-choirs.jpg"); }
+.explore-card.orchestras { background-image: url("images/home-card-orchestras.jpg"); }
+.explore-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(22,33,58,0.15), rgba(22,33,58,0.8));
+  transition: background 0.2s ease;
+}
+.explore-card:hover::before { background: linear-gradient(180deg, rgba(22,33,58,0.25), rgba(22,33,58,0.88)); }
+.explore-card .label {
+  position: absolute;
+  left: 26px;
+  bottom: 24px;
+  z-index: 1;
+}
+.explore-card h3 {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(1.6rem, 3vw, 2.1rem);
+  color: var(--cream);
+  margin: 0 0 4px;
+}
+.explore-card .go {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: rgba(244,246,247,0.85);
+}
+
+/* Unified photo hero for inner pages (replaces page-head + page-banner
+   stacking) — text sits directly on the photo, same pattern as the
+   homepage hero. Set the image via inline style="background-image:...". */
+.page-hero {
+  background-color: var(--ink);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center 20%;
+  color: var(--cream);
+  padding: clamp(44px, 8vw, 76px) 0 clamp(36px, 6vw, 56px);
+  position: relative;
+}
+.page-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, rgba(22,33,58,0.85) 0%, rgba(22,33,58,0.6) 42%, rgba(22,33,58,0.2) 68%), linear-gradient(180deg, rgba(22,33,58,0.5), rgba(22,33,58,0.88) 75%, var(--ink) 100%);
+}
+.page-hero .wrap { position: relative; z-index: 1; }
+.page-hero h1 {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(2rem, 5vw, 3rem);
+  margin: 16px 0 0;
+}
+.page-hero h1:first-child { margin-top: 0; }
+.page-hero p { color: rgba(244,246,247,0.82); max-width: 52ch; margin-top: 14px; font-size: 1.05rem; }
+.hero-split {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+.quote-on-hero {
+  background: rgba(22,33,58,0.55);
+  border-left: 2px solid var(--gold);
+  color: var(--cream);
+  padding: 18px 22px;
+  border-radius: 4px;
+  max-width: 320px;
+  margin: 0;
+  font-size: 1.05rem;
+}
+.quote-on-hero cite { color: rgba(244,246,247,0.75); }
+@media (max-width: 780px) {
+  .hero-split { align-items: flex-start; }
+}
+
+/* On dark backgrounds (hero, page-hero), eyebrow needs the brighter aqua —
+   the deep-teal default is for light/cream backgrounds and would be nearly
+   invisible on navy. */
+.hero .eyebrow, .page-hero .eyebrow, .page-head .eyebrow { color: var(--gold); }
+.page-hero .btn, .page-head .btn { margin-top: 22px; }
+.page-banner-caption {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-soft);
+  padding: 10px clamp(20px, 5vw, 56px) 0;
+  max-width: var(--max);
+  margin: 0 auto;
+}
+.facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+  margin: 0 0 22px;
+  padding: 18px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.facts .fact { min-width: 140px; }
+.facts .fact .k {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+  display: block;
+  margin-bottom: 4px;
+}
+.facts .fact .v { font-size: 0.98rem; font-weight: 500; }
+.badge {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+  margin-bottom: 16px;
+}
+.badge.audition { border-color: var(--plum); color: var(--plum); }
+.badge.open { border-color: var(--gold-deep); color: var(--gold-deep); }
+.badge.waitlist { border-color: var(--plum); color: var(--plum); }
+.badge.closed { border-color: var(--line); color: var(--ink-soft); }
+
+/* Embedded Google Form (Apply page) */
+.form-embed {
+  margin-top: 32px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  overflow: hidden;
+  background: #fff;
+}
+.form-embed iframe {
+  width: 100%;
+  height: 1500px;
+  border: none;
+  display: block;
+}
+@media (max-width: 600px) {
+  .form-embed iframe { height: 1850px; }
+}
+
+/* Musical Directors page — side-by-side director cards */
+.directors-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+}
+@media (max-width: 780px) {
+  .directors-grid { grid-template-columns: 1fr; gap: 40px; }
+}
+.director-card .portrait {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  object-position: center 18%;
+  border-radius: 3px;
+  margin-bottom: 22px;
+}
+.director-card h3 {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(1.4rem, 2.6vw, 1.9rem);
+  margin: 0 0 6px;
+}
+.director-card p { font-size: 0.98rem; }
+.page-head {
+  background: var(--ink);
+  color: var(--cream);
+  padding: clamp(44px, 8vw, 76px) 0 clamp(36px, 6vw, 56px);
+}
+.page-head h1 {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(2rem, 5vw, 3rem);
+  margin: 16px 0 0;
+}
+.page-head h1:first-child { margin-top: 0; }
+.page-head p { color: rgba(244,246,247,0.78); max-width: 52ch; margin-top: 14px; font-size: 1.05rem; }
+
+.prose { max-width: 68ch; }
+.prose p { margin: 0 0 18px; color: var(--ink-soft); }
+.prose h3 {
+  font-family: var(--display);
+  font-size: 1.35rem;
+  font-weight: 600;
+  margin: 0 0 12px;
+}
+
+/* Placeholder note for content not yet migrated */
+.todo-note {
+  background: rgba(201,138,62,0.1);
+  border: 1px dashed var(--gold);
+  border-radius: 4px;
+  padding: 18px 22px;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin: 0 0 32px;
+}
+.todo-note strong { color: var(--ink); }
+
+/* Contact / details */
+.detail-list { list-style: none; margin: 0; padding: 0; }
+.detail-list li {
+  display: flex;
+  gap: 14px;
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
+  font-size: 1rem;
+}
+.detail-list li:last-child { border-bottom: 1px solid var(--line); }
+.detail-list .k {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+  width: 120px;
+  flex-shrink: 0;
+  padding-top: 3px;
+}
+.detail-list a { text-decoration: underline; text-decoration-color: var(--line); }
+
+/* ---------- Footer ---------- */
+.site-footer {
+  background: var(--ink);
+  color: rgba(244,246,247,0.7);
+  padding: 40px 0 32px;
+}
+.footer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 13.5px;
+}
+.footer-row a { text-decoration: none; color: rgba(244,246,247,0.7); }
+.footer-row a:hover { color: var(--cream); }
+.footer-links { display: flex; gap: 22px; list-style: none; margin: 0; padding: 0; }
+.footer-logo { height: 26px; width: auto; opacity: 0.85; margin-bottom: 18px; }

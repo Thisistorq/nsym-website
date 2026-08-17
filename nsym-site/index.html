@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>North Shore Youth Music — Choirs &amp; Orchestras, Auckland</title>
+<meta name="description" content="North Shore Youth Music runs choirs and orchestras for young musicians on Auckland's North Shore. Apply now and start making music.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" href="images/favicon-32.png" type="image/png">
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+</head>
+<body>
+
+<script>
+  // Netlify's invite/recovery emails always link to the site root with a
+  // token in the URL hash — redirect straight to our own accept-invite
+  // page (which talks to Netlify Identity's API directly) rather than
+  // relying on Netlify's bundled widget, which has a bug where it tries
+  // to complete invite signups with an empty password automatically.
+  if (location.hash && /invite_token=|recovery_token=/.test(location.hash)) {
+    location.replace('accept-invite.html' + location.hash);
+  }
+</script>
+<header class="site-header">
+  <nav class="nav">
+    <a href="index.html" class="brand"><img src="images/logo-dark.png" alt="North Shore Youth Music"></a>
+    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links">
+      <li><a href="choirs.html">Choirs</a></li>
+      <li><a href="orchestras.html">Orchestras</a></li>
+      <li><a href="musical-directors.html">Musical Directors</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="apply.html" class="btn btn-gold">Apply now</a></li>
+    </ul>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <svg class="stave on-ink" viewBox="0 0 600 34" preserveAspectRatio="none" aria-hidden="true">
+      <line x1="0" y1="3" x2="600" y2="3"/>
+      <line x1="0" y1="10" x2="600" y2="10"/>
+      <line x1="0" y1="17" x2="600" y2="17"/>
+      <line x1="0" y1="24" x2="600" y2="24"/>
+      <line x1="0" y1="31" x2="600" y2="31"/>
+    </svg>
+    <span class="eyebrow">North Shore Youth Music</span>
+    <h1>Where music and <em>education</em> collide.</h1>
+    <p class="lede">Choirs and orchestras for young musicians on Auckland's North Shore — building skill, confidence and friendship through ensemble music.</p>
+    <div class="hero-actions">
+      <a href="apply.html" class="btn btn-gold">Apply Now</a>
+      <a href="https://www.facebook.com/NorthShoreYouthMusic" class="btn btn-outline">Follow on Facebook</a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="explore-grid">
+      <a class="explore-card choirs" href="choirs.html">
+        <div class="label">
+          <h3>Choirs</h3>
+          <span class="go">View &rarr;</span>
+        </div>
+      </a>
+      <a class="explore-card orchestras" href="orchestras.html">
+        <div class="label">
+          <h3>Orchestras</h3>
+          <span class="go">View &rarr;</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">From the ensembles</span>
+      <h2>On stage this year</h2>
+      <p>Catch highlights from recent combined performances on our <a href="https://youtube.com/playlist?list=PLyCbgr6dgKtjUwtZn5uu79vYI7wYTTe1q&si=2Z4dsdvaFvmG3Z_r">YouTube page</a>, or meet the <a href="musical-directors.html">Musical Directors</a> behind them.</p>
+  </div>
+  <div class="carousel">
+    <div class="carousel-track">
+      <img src="images/home-photo-01.jpg" alt="North Shore Youth Music performance, 2025" loading="lazy">
+      <img src="images/home-photo-02.jpg" alt="North Shore Youth Music ensemble, 2025" loading="lazy">
+      <img src="images/home-photo-03.jpg" alt="North Shore Youth Music concert, 2025" loading="lazy">
+      <img src="images/home-photo-04.jpg" alt="North Shore Youth Music orchestra rehearsal, 2025" loading="lazy">
+      <img src="images/home-photo-05.jpg" alt="North Shore Youth Music wind section, 2025" loading="lazy">
+      <img src="images/home-photo-06.jpg" alt="North Shore Youth Music cello section, 2025" loading="lazy">
+      <img src="images/home-photo-07.jpg" alt="North Shore Youth Music combined concert, 2025" loading="lazy">
+      <img src="images/home-photo-08.jpg" alt="North Shore Youth Music combined ensembles, 2025" loading="lazy">
+      <!-- Duplicate set — makes the loop seamless (animation scrolls exactly 50% = one full set) -->
+      <img src="images/home-photo-01.jpg" alt="" aria-hidden="true" loading="lazy">
+      <img src="images/home-photo-02.jpg" alt="" aria-hidden="true" loading="lazy">
+      <img src="images/home-photo-03.jpg" alt="" aria-hidden="true" loading="lazy">
+      <img src="images/home-photo-04.jpg" alt="" aria-hidden="true" loading="lazy">
+      <img src="images/home-photo-05.jpg" alt="" aria-hidden="true" loading="lazy">
+      <img src="images/home-photo-06.jpg" alt="" aria-hidden="true" loading="lazy">
+      <img src="images/home-photo-07.jpg" alt="" aria-hidden="true" loading="lazy">
+      <img src="images/home-photo-08.jpg" alt="" aria-hidden="true" loading="lazy">
+    </div>
+  </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <img class="footer-logo" src="images/logo.webp" alt="North Shore Youth Music">
+    <div class="footer-row">
+      <span>022 466 7100 &nbsp;·&nbsp; <a href="mailto:info@nsym.org.nz">info@nsym.org.nz</a></span>
+      <ul class="footer-links">
+        <li><a href="https://www.facebook.com/NorthShoreYouthMusic">Facebook</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
