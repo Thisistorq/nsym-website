@@ -17,10 +17,12 @@
   .admin-card h2 { font-family: var(--display); font-size: 1.3rem; margin: 0 0 18px; }
   .field { margin-bottom: 16px; }
   .field label { display: block; font-family: var(--mono); font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gold); margin-bottom: 6px; }
-  .field input[type=text], .field select {
+  .field input[type=text], .field select, .field textarea {
     width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 4px;
     font-family: var(--body); font-size: 15px; box-sizing: border-box;
   }
+  .field textarea { min-height: 110px; resize: vertical; font-family: var(--body); line-height: 1.5; }
+  .field .hint { font-family: var(--mono); font-size: 11px; color: var(--ink-soft); margin-top: 5px; text-transform: none; letter-spacing: 0; }
   .status-row { display: flex; gap: 10px; align-items: flex-start; }
   .status-row select { flex: 0 0 130px; }
   .status-row input { flex: 1; }
@@ -79,23 +81,43 @@
   <form id="edit-form" class="hidden">
 
     <div class="admin-card">
-      <h2>Choirs — rehearsal times &amp; fees</h2>
+      <h2>Choirs</h2>
       <div class="field"><label>Songsters — Rehearsal A</label><input type="text" data-file="choirs.html" data-id="f-songsters-rehearsal-a"></div>
       <div class="field"><label>Songsters — Rehearsal B</label><input type="text" data-file="choirs.html" data-id="f-songsters-rehearsal-b"></div>
       <div class="field"><label>Songsters — Fee</label><input type="text" data-file="choirs.html" data-id="f-songsters-fee"></div>
+      <div class="field"><label>Songsters — Description</label>
+        <textarea data-file="choirs.html" data-id="d-songsters" data-type="desc"></textarea>
+        <div class="hint">Leave a blank line between paragraphs. (The "no audition, apply here" line below this on the site is fixed and not editable here.)</div>
+      </div>
       <div class="field"><label>Children's Choir — Rehearsal</label><input type="text" data-file="choirs.html" data-id="f-cc-rehearsal"></div>
       <div class="field"><label>Children's Choir — Fee</label><input type="text" data-file="choirs.html" data-id="f-cc-fee"></div>
+      <div class="field"><label>Children's Choir — Description</label>
+        <textarea data-file="choirs.html" data-id="d-cc" data-type="desc"></textarea>
+        <div class="hint">Leave a blank line between paragraphs.</div>
+      </div>
       <div class="field"><label>Con Brio — Rehearsal</label><input type="text" data-file="choirs.html" data-id="f-cb-rehearsal"></div>
       <div class="field"><label>Con Brio — Fee</label><input type="text" data-file="choirs.html" data-id="f-cb-fee"></div>
+      <div class="field"><label>Con Brio — Description</label>
+        <textarea data-file="choirs.html" data-id="d-cb" data-type="desc"></textarea>
+        <div class="hint">Leave a blank line between paragraphs.</div>
+      </div>
     </div>
 
     <div class="admin-card">
-      <h2>Orchestras — rehearsal times &amp; fees</h2>
+      <h2>Orchestras</h2>
       <div class="field"><label>Stringalongs — Rehearsal</label><input type="text" data-file="orchestras.html" data-id="f-sa-rehearsal"></div>
       <div class="field"><label>Stringalongs — Fee</label><input type="text" data-file="orchestras.html" data-id="f-sa-fee"></div>
+      <div class="field"><label>Stringalongs — Description</label>
+        <textarea data-file="orchestras.html" data-id="d-sa" data-type="desc"></textarea>
+        <div class="hint">Leave a blank line between paragraphs. (The "how to join" line above this on the site is fixed and not editable here.)</div>
+      </div>
       <div class="field"><label>Junior Orchestra — Rehearsal</label><input type="text" data-file="orchestras.html" data-id="f-jo-rehearsal"></div>
       <div class="field"><label>Junior Orchestra — Fee (1 child)</label><input type="text" data-file="orchestras.html" data-id="f-jo-fee1"></div>
       <div class="field"><label>Junior Orchestra — Fee (2 children)</label><input type="text" data-file="orchestras.html" data-id="f-jo-fee2"></div>
+      <div class="field"><label>Junior Orchestra — Description</label>
+        <textarea data-file="orchestras.html" data-id="d-jo" data-type="desc"></textarea>
+        <div class="hint">Leave a blank line between paragraphs.</div>
+      </div>
     </div>
 
     <div class="admin-card">
@@ -132,6 +154,41 @@
           <select data-file="apply.html" data-id="s-con-brio" data-type="status-select"><option value="open">Open</option><option value="waitlist">Waitlist</option><option value="closed">Closed</option></select>
           <input type="text" data-file="apply.html" data-id="s-con-brio" data-type="status-text">
         </div>
+      </div>
+    </div>
+
+    <div class="admin-card">
+      <h2>Musical Directors — bios</h2>
+      <div class="field"><label>David Kay — Bio</label>
+        <textarea data-file="musical-directors.html" data-id="d-david-kay" data-type="desc"></textarea>
+        <div class="hint">Leave a blank line between paragraphs.</div>
+      </div>
+      <div class="field"><label>Vanessa Kay — Bio</label>
+        <textarea data-file="musical-directors.html" data-id="d-vanessa-kay" data-type="desc"></textarea>
+        <div class="hint">Leave a blank line between paragraphs.</div>
+      </div>
+    </div>
+
+    <div class="admin-card">
+      <h2>Contact page</h2>
+      <p style="color:var(--ink-soft); font-size:0.9rem; margin-top:-10px; margin-bottom:20px;">Note: these only update the Contact page itself. The phone/email shown in the footer on every other page are separate and won't change automatically — let Carl know if those need updating too.</p>
+      <div class="field"><label>Email address</label>
+        <input type="text" data-file="contact.html" data-id="c-email" data-type="email">
+      </div>
+      <div class="field"><label>Phone number</label>
+        <input type="text" data-file="contact.html" data-id="c-phone" data-type="phone">
+      </div>
+      <div class="field"><label>Facebook — link</label>
+        <input type="text" data-file="contact.html" data-id="c-facebook" data-type="href">
+      </div>
+      <div class="field"><label>Facebook — text shown</label>
+        <input type="text" data-file="contact.html" data-id="c-facebook" data-type="linktext">
+      </div>
+      <div class="field"><label>YouTube — link</label>
+        <input type="text" data-file="contact.html" data-id="c-youtube" data-type="href">
+      </div>
+      <div class="field"><label>YouTube — text shown</label>
+        <input type="text" data-file="contact.html" data-id="c-youtube" data-type="linktext">
       </div>
     </div>
 
@@ -177,7 +234,7 @@
 // restriction, and GitHub's own secret-scanning auto-revoked the embedded
 // token within moments of it being committed.
 const API_ROOT = "/.netlify/functions/github-content?path=";
-const FILES = ["choirs.html", "orchestras.html", "apply.html"];
+const FILES = ["choirs.html", "orchestras.html", "apply.html", "musical-directors.html", "contact.html"];
 let fileCache = {}; // filename -> { content, sha }
 
 // ---- Direct Identity API auth (no widget) ----
@@ -279,6 +336,36 @@ function getStatusValue(content, id) {
   return m ? { status: m[1], text: m[2].trim() } : null;
 }
 
+function getDescValue(content, id) {
+  // <div class="desc-edit" id="ID"> <p>...</p> <p>...</p> </div>
+  const re = new RegExp('<div class="desc-edit" id="' + id + '">([\\s\\S]*?)</div>', 'i');
+  const m = content.match(re);
+  if (!m) return null;
+  const paras = m[1].trim().split(/<\/p>\s*<p>/i).map(p =>
+    p.replace(/^\s*<p>/i, '').replace(/<\/p>\s*$/i, '').trim()
+  );
+  return paras.join('\n\n');
+}
+
+function setDescValue(content, id, text) {
+  const paras = text.split(/\n\s*\n/).map(p => p.trim()).filter(Boolean);
+  const inner = '\n      ' + paras.map(p => '<p>' + p + '</p>').join('\n      ') + '\n      ';
+  const re = new RegExp('(<div class="desc-edit" id="' + id + '">)([\\s\\S]*?)(</div>)', 'i');
+  return content.replace(re, (m, a, b, c) => a + inner + c);
+}
+
+function getLinkValue(content, id) {
+  // <a href="HREF" id="ID">TEXT</a>
+  const re = new RegExp('<a href="([^"]*)" id="' + id + '">([^<]*)</a>', 'i');
+  const m = content.match(re);
+  return m ? { href: m[1], text: m[2] } : null;
+}
+
+function setLinkValue(content, id, href, text) {
+  const re = new RegExp('(<a href=")[^"]*("\\s+id="' + id + '">)[^<]*(</a>)', 'i');
+  return content.replace(re, (m, a, b, c) => a + href + b + text + c);
+}
+
 function populateForm() {
   document.querySelectorAll('[data-id]').forEach(el => {
     const file = el.dataset.file;
@@ -290,6 +377,18 @@ function populateForm() {
       if (v) el.value = v.status;
     } else if (type === "status-text") {
       const v = getStatusValue(content, id);
+      if (v) el.value = v.text;
+    } else if (type === "desc") {
+      const v = getDescValue(content, id);
+      if (v !== null) el.value = v;
+    } else if (type === "email" || type === "phone") {
+      const v = getLinkValue(content, id);
+      if (v) el.value = v.text;
+    } else if (type === "href") {
+      const v = getLinkValue(content, id);
+      if (v) el.value = v.href;
+    } else if (type === "linktext") {
+      const v = getLinkValue(content, id);
       if (v) el.value = v.text;
     } else {
       const v = getFieldValue(content, id);
@@ -314,6 +413,35 @@ function applyEdits() {
     const file = el.dataset.file, id = el.dataset.id;
     const re = new RegExp('(id="' + id + '">)([\\s\\S]*?)(</span>)', 'i');
     edited[file] = edited[file].replace(re, (m, a, b, c) => a + el.value + c);
+  });
+
+  // description textareas
+  document.querySelectorAll('textarea[data-type="desc"]').forEach(el => {
+    const file = el.dataset.file, id = el.dataset.id;
+    edited[file] = setDescValue(edited[file], id, el.value);
+  });
+
+  // email field: one input controls both mailto: href and displayed text
+  document.querySelectorAll('input[data-type="email"]').forEach(el => {
+    const file = el.dataset.file, id = el.dataset.id;
+    const value = el.value.trim();
+    edited[file] = setLinkValue(edited[file], id, "mailto:" + value, value);
+  });
+
+  // phone field: one input controls both tel: href (digits only) and displayed text
+  document.querySelectorAll('input[data-type="phone"]').forEach(el => {
+    const file = el.dataset.file, id = el.dataset.id;
+    const value = el.value.trim();
+    edited[file] = setLinkValue(edited[file], id, "tel:" + value.replace(/\D/g, ''), value);
+  });
+
+  // href/linktext pairs: two separate inputs sharing the same data-id
+  const linkIds = [...new Set([...document.querySelectorAll('[data-type=href]')].map(e => e.dataset.id))];
+  linkIds.forEach(id => {
+    const hrefInput = document.querySelector('input[data-type=href][data-id="' + id + '"]');
+    const textInput = document.querySelector('input[data-type=linktext][data-id="' + id + '"]');
+    const file = hrefInput.dataset.file;
+    edited[file] = setLinkValue(edited[file], id, hrefInput.value.trim(), textInput.value);
   });
 
   // status blocks: pair select + text by data-id
