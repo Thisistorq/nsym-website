@@ -137,10 +137,10 @@
           <input type="text" data-file="apply.html" data-id="s-childrens-choir" data-type="status-text">
         </div>
       </div>
-      <div class="field"><label>Junior Orchestra</label>
+      <div class="field"><label>Con Brio</label>
         <div class="status-row">
-          <select data-file="apply.html" data-id="s-junior-orchestra" data-type="status-select"><option value="open">Open</option><option value="waitlist">Waitlist</option><option value="closed">Closed</option></select>
-          <input type="text" data-file="apply.html" data-id="s-junior-orchestra" data-type="status-text">
+          <select data-file="apply.html" data-id="s-con-brio" data-type="status-select"><option value="open">Open</option><option value="waitlist">Waitlist</option><option value="closed">Closed</option></select>
+          <input type="text" data-file="apply.html" data-id="s-con-brio" data-type="status-text">
         </div>
       </div>
       <div class="field"><label>Stringalongs</label>
@@ -149,10 +149,10 @@
           <input type="text" data-file="apply.html" data-id="s-stringalongs" data-type="status-text">
         </div>
       </div>
-      <div class="field"><label>Con Brio</label>
+      <div class="field"><label>Junior Orchestra</label>
         <div class="status-row">
-          <select data-file="apply.html" data-id="s-con-brio" data-type="status-select"><option value="open">Open</option><option value="waitlist">Waitlist</option><option value="closed">Closed</option></select>
-          <input type="text" data-file="apply.html" data-id="s-con-brio" data-type="status-text">
+          <select data-file="apply.html" data-id="s-junior-orchestra" data-type="status-select"><option value="open">Open</option><option value="waitlist">Waitlist</option><option value="closed">Closed</option></select>
+          <input type="text" data-file="apply.html" data-id="s-junior-orchestra" data-type="status-text">
         </div>
       </div>
     </div>
@@ -317,7 +317,10 @@ async function loadFile(name) {
   const res = await fetch(API_ROOT + name);
   if (!res.ok) throw new Error("Failed to load " + name + " (" + res.status + ")");
   const data = await res.json();
-  const content = atob(data.content.replace(/\n/g, ""));
+  // GitHub sends base64 of UTF-8 bytes; decode them as UTF-8 (atob alone gives
+  // Latin-1, and saving that back double-encodes characters like — and · each time)
+  const bytes = Uint8Array.from(atob(data.content.replace(/\n/g, "")), c => c.charCodeAt(0));
+  const content = new TextDecoder("utf-8").decode(bytes);
   fileCache[name] = { content, sha: data.sha };
 }
 

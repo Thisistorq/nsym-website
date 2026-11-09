@@ -700,6 +700,9 @@ a.programme-row:hover .title { color: var(--gold-deep); }
   padding-top: 3px;
 }
 .detail-list a { text-decoration: underline; text-decoration-color: var(--line); }
+/* Ages under each ensemble name on the Apply page, one line each */
+.detail-list .k .age { display: block; white-space: nowrap; font-size: 11px; letter-spacing: 0.04em; color: var(--muted, #5b6575); text-transform: none; }
+.detail-list li:has(.age) .k { width: 150px; }
 
 /* ---------- Footer ---------- */
 .site-footer {
