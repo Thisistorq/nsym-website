@@ -6,10 +6,19 @@
 // Called by admin.html as:
 //   GET  /.netlify/functions/github-content?path=choirs.html
 //   PUT  /.netlify/functions/github-content?path=choirs.html   (JSON body: {content, sha, message})
+//
+// Callers must send a valid Netlify Identity access token
+// (Authorization: Bearer ...), which admin.html does on every request.
+// Netlify verifies it and exposes the user as context.clientContext.user;
+// without that check anyone who found this URL could rewrite the site.
 
 const REPO = "Thisistorq/nsym-website";
 
-exports.handler = async (event) => {
+exports.handler = async function (event, context) {
+  if (!context.clientContext || !context.clientContext.user) {
+    return { statusCode: 401, body: 'Not logged in' };
+  }
+
   const token = process.env.GITHUB_TOKEN;
   if (!token) {
     return { statusCode: 500, body: JSON.stringify({ error: "GITHUB_TOKEN not set in Netlify environment variables" }) };
